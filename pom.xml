@@ -37,6 +37,7 @@
 	</licenses>
 
 	<properties>
+		<governance.version>0.1.0</governance.version>
 		<dss.version>1.0.0-RC1</dss.version>
 		<linkis.version>1.0.1</linkis.version>
 		<streamis.version>0.1.0-SNAPSHOT</streamis.version>
@@ -66,11 +67,26 @@
 	</properties>
 
 	<modules>
-		<module>governance-plugins</module>
+		<module>governance-dao</module>
+		<module>data-warehouse</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- 数据治理模块依赖		START -->
+			<dependency>
+				<groupId>com.webank.wedatasphere.governance</groupId>
+				<artifactId>governance-dao</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.webank.wedatasphere.governance</groupId>
+				<artifactId>data-warehouse-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- 数据治理模块依赖		END -->
 			<dependency>
 				<groupId>org.scala-lang</groupId>
 				<artifactId>scala-library</artifactId>
@@ -159,8 +175,15 @@
 				<artifactId>linkis-datasource-client</artifactId>
 				<version>${linkis.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.18.20</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 
 	<build>
 		<pluginManagement>
