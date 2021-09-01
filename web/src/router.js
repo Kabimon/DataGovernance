@@ -27,6 +27,7 @@ const router = new VueRouter({
   routes
 });
 
+// 如有需要，可在beforeEach中添加动态(菜单)路由
 router.beforeEach((to, from, next) => {
   if (to.meta) {
     // 给路由添加参数，控制显示对应header

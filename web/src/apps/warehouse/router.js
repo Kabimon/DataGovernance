@@ -1,23 +1,9 @@
-/*
- * Copyright 2019 WeBank
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+// 如果子应用无需自己的layout，subAppRoutes可去掉
 export const subAppRoutes = {
   path: '',
   name: 'layout',
-  component: () => import('./view/layout.vue'),
+  // component: () => import('./view/layout.vue'),
+  component: () => import('@/dss/view/layout.vue'),
   redirect: '/warehouse',
   meta: {
     title: 'DataGovernance',
@@ -28,8 +14,8 @@ export const subAppRoutes = {
 
 export default [
   {
-    path: 'warehouse',
-    name: 'Warehouse',
+    path: '/warehouse',
+    name: 'warehouse',
     redirect: '/warehouse/index',
     meta: {
       title: 'Warehouse',
@@ -38,7 +24,7 @@ export default [
     component: () => import('./view/linkis/index.vue'),
     children: [{
       name: 'Warehouse home',
-      path: 'index',
+      path: '/warehouse/index',
       component: () => import('./view/home/index.vue'),
       meta: {
         title: 'Warehouse home',
@@ -47,11 +33,21 @@ export default [
     },
     {
       name: 'Warehouse home2',
-      path: 'index2',
-      component: () => import('./view/home/index.vue'),
+      path: '/warehouse/linkis',
+      component: () => import('./view/home/second.vue'),
       meta: {
-        title: 'Warehouse home',
+        title: 'Warehouse home2',
         publicPage: true,
+      },
+    },
+    {
+      name: 'Warehouse home3',
+      path: '/warehouse/iframe',
+      // component: () => import('./view/home/index.vue'),
+      meta: {
+        title: 'Warehouse home3',
+        publicPage: true,
+        iframeUrl: 'https://iview.github.io/'
       },
     }
     ]
