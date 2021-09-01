@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>data-warehouse</artifactId>
+        <artifactId>data-assets</artifactId>
         <groupId>com.webank.wedatasphere.governance</groupId>
         <version>0.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>data-warehouse-server</artifactId>
+    <artifactId>data-assets-server</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,15 +18,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.webank.wedatasphere.governance</groupId>
-            <artifactId>data-warehouse-service</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.webank.wedatasphere.linkis</groupId>
             <artifactId>linkis-module</artifactId>
         </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
@@ -64,7 +60,7 @@
                 </executions>
                 <configuration>
                     <skipAssembly>false</skipAssembly>
-                    <finalName>data-warehouse-server</finalName>
+                    <finalName>data-assets-server</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <attach>false</attach>
                     <descriptors>
