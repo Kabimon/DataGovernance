@@ -40,8 +40,6 @@ if (appsRoutes) {
 
 routes.unshift(subRoutes)
 
-console.log(routes)
-
 // 公共国际化
 const i18n = {
   'en': require('./common/i18n/en.json'),
@@ -57,6 +55,7 @@ if (apps.appsI18n) {
 
 export {
   routes,
+  subRoutes,
   i18n,
   apps
 }

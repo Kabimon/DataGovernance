@@ -19,7 +19,8 @@ export default [
     redirect: '/warehouse/index',
     meta: {
       title: 'Warehouse',
-      publicPage: true,
+      publicPage: true, // false可以隐藏菜单
+      icon: 'ios-browsers'
     },
     component: () => import('./view/linkis/index.vue'),
     children: [{
@@ -29,24 +30,26 @@ export default [
       meta: {
         title: 'Warehouse home',
         publicPage: true,
+        icon: 'ios-paper'
       },
     },
     {
       name: 'Warehouse home2',
-      path: '/warehouse/linkis',
+      path: '/warehouse/second',
       component: () => import('./view/home/second.vue'),
       meta: {
         title: 'Warehouse home2',
         publicPage: true,
+        icon: 'ios-paper'
       },
     },
     {
       name: 'Warehouse home3',
       path: '/warehouse/iframe',
-      // component: () => import('./view/home/index.vue'),
       meta: {
         title: 'Warehouse home3',
         publicPage: true,
+        icon: 'ios-paper',
         iframeUrl: 'https://iview.github.io/'
       },
     }

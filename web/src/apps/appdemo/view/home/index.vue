@@ -1,18 +1,14 @@
 <template>
   <div class="console-page">
-    <div>second</div>
+    <div>demo1</div>
   </div>
 </template>
 <script>
 export default {
+  name: 'demo1',
   data() {
     return {}
   }
 };
 </script>
-<style lang="scss" scoped>
-  .crrentItem {
-    color: #338cf0;
-  }
-</style>
 

@@ -1,6 +1,7 @@
 <template>
   <div class="console-page">
-    <div>second</div>
+    <div>appdemo</div>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -10,9 +11,4 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-  .crrentItem {
-    color: #338cf0;
-  }
-</style>
 

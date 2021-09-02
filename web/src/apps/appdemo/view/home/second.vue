@@ -1,6 +1,6 @@
 <template>
   <div class="console-page">
-    <div>second</div>
+    <div>demo2</div>
   </div>
 </template>
 <script>
@@ -10,9 +10,4 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-  .crrentItem {
-    color: #338cf0;
-  }
-</style>
 

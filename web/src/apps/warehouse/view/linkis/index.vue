@@ -8,7 +8,6 @@
 export default {
   name: 'Layout1',
   data() {
-    console.log('---->')
     return {}
   }
 };
