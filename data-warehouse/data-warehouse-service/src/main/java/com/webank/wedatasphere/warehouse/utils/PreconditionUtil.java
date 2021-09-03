@@ -1,7 +1,6 @@
 package com.webank.wedatasphere.warehouse.utils;
 
 import com.google.common.base.Strings;
-import com.webank.wedatasphere.linkis.common.exception.ErrorException;
 import com.webank.wedatasphere.warehouse.exception.DwException;
 
 import javax.annotation.Nullable;

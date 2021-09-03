@@ -128,6 +128,7 @@ public class DwLayerServiceImpl implements DwLayerService {
         return Message.ok().data("page", __page);
     }
 
+    // TODO 后面需要检查主题域下有没有关联的 Hive 表，才决定是否删除
     @Transactional
     @Override
     public Message deleteById(HttpServletRequest request, Long id) throws DwException {
