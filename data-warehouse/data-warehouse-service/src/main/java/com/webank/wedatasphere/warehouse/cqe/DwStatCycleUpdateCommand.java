@@ -7,12 +7,15 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class DwSubjectDomainUpdateCommand {
+public class DwStatCycleUpdateCommand {
     private Long id;
+    private Long subjectDomainId;
+    private Long layerId;
     private String name;
     private String nameAlias;
-    private String chargeUser;
-    private String availableRoles;
     private String description;
-    private String authority;
+    private String statStartFormula;
+    private String statEndFormula;
+    private String availableRoles;
+    private String chargeUser;
 }

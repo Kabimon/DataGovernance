@@ -10,6 +10,10 @@ import lombok.ToString;
 public class DwLayerUpdateCommand {
     private Long id;
     private String name;
+    private String nameAlias;
+    private String availableDbs;
+    private String autoCollectStrategy;
+    private String chargeUser;
     private String description;
     private String authority;
 }

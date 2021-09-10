@@ -39,6 +39,9 @@ public class DwStatCycle {
     @TableField(value = "stat_end_formula")
     private String statEndFormula;
 
+    @TableField(value = "available_roles")
+    private String availableRoles;
+
     private Boolean enabled;
 
     @TableField(value = "charge_user")

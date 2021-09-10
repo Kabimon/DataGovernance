@@ -8,11 +8,11 @@ import lombok.ToString;
 @Getter
 @ToString
 public class DwLayerCreateCommand {
-
     private String name;
-
+    private String nameAlias;
+    private String availableDbs;
+    private String autoCollectStrategy;
+    private String chargeUser;
     private String description;
-
     private String authority;
-
 }

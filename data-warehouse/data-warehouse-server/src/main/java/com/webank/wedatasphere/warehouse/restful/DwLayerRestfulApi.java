@@ -28,25 +28,14 @@ public class DwLayerRestfulApi {
         this.dwLayerService = dwLayerService;
     }
 
-    /**
-     * 获取所有预置分层
-     * @param request req
-     * @return 所有预置分层信息
-     * @throws DwException extends ErrorException
-     */
-    @GET
+    // list all preset layers
     @Path("/layers/preset")
     public Response getAllPresetLayers(@Context HttpServletRequest request) throws DwException {
         Message message = this.dwLayerService.getAllPresetLayers(request);
         return Message.messageToResponse(message);
     }
 
-    /**
-     * 发根也获取自定义预置分层
-     * @param request req
-     * @return 所有预置分层信息
-     * @throws DwException extends ErrorException
-     */
+    // query paged custom layers
     @GET
     @Path("/layers/custom")
     public Response queryPagedCustomLayers(
@@ -65,7 +54,7 @@ public class DwLayerRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 新增自定义分层
+    // create custom layer
     @POST
     @Path("/layers/custom")
     public Response createDwCustomLayer(@Context HttpServletRequest request, DwLayerCreateCommand command) throws DwException {
@@ -73,7 +62,7 @@ public class DwLayerRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 查询某个分层信息
+    // get layer by id
     @GET
     @Path("/layers/{id}")
     public Response getLayerById(
@@ -84,7 +73,7 @@ public class DwLayerRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 删除某个分层
+    // delete layer
     @DELETE
     @Path("/layers/{id}")
     public Response deleteById(
@@ -95,7 +84,7 @@ public class DwLayerRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 更新某个分层
+    // update layer
     @PUT
     @Path("/layers/{id}")
     public Response update(
@@ -108,4 +97,25 @@ public class DwLayerRestfulApi {
         return Message.messageToResponse(message);
     }
 
+    // enable layer
+    @PUT
+    @Path("/layers/{id}/enable")
+    public Response enable(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwLayerService.enable(request, id);
+        return Message.messageToResponse(message);
+    }
+
+    // disable layer
+    @PUT
+    @Path("/layers/{id}/disable")
+    public Response disable(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwLayerService.disable(request, id);
+        return Message.messageToResponse(message);
+    }
 }

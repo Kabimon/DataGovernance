@@ -22,6 +22,9 @@ public class DwLayer {
 
     private String name;
 
+    @TableField(value = "name_alias")
+    private String nameAlias;
+
     private String description;
 
     private String authority;
@@ -29,6 +32,15 @@ public class DwLayer {
     private Boolean preset;
 
     private Boolean enabled;
+
+    @TableField(value = "auto_collect_strategy")
+    private String autoCollectStrategy;
+
+    @TableField(value = "available_dbs")
+    private String availableDbs;
+
+    @TableField(value = "charge_user")
+    private String chargeUser;
 
     @TableField(value = "create_user")
     private String createUser;

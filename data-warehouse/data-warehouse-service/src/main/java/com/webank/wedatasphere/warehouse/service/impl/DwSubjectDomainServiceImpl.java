@@ -33,7 +33,7 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
     private final DwSubjectDomainMapper dwSubjectDomainMapper;
 
     @Autowired
-    public DwSubjectDomainServiceImpl(DwSubjectDomainMapper dwSubjectDomainMapper) {
+    public DwSubjectDomainServiceImpl(final DwSubjectDomainMapper dwSubjectDomainMapper) {
         this.dwSubjectDomainMapper = dwSubjectDomainMapper;
     }
 
@@ -51,7 +51,7 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
         QueryWrapper<DwSubjectDomain> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", Boolean.TRUE);
         if (Strings.isNotBlank(name)) {
-            queryWrapper.like("name", name);
+            queryWrapper.like("name", name).or().like("name_alias", name);
         }
         Page<DwSubjectDomain> queryPage = new Page<>(page, size);
 
@@ -70,12 +70,23 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
     @Override
     public Message create(HttpServletRequest request, DwSubjectDomainCreateCommand command) throws DwException {
         String name = command.getName();
+        String nameAlias = command.getNameAlias();
+        String availableRoles = command.getAvailableRoles();
+        String chargeUser = command.getChargeUser();
         String description = command.getDescription();
         String authority = command.getAuthority();
 
         name = PreconditionUtil.checkStringArgumentNotBlankTrim(name, DwException.argumentReject("name should not empty"));
+//        authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
+        nameAlias = PreconditionUtil.checkStringArgumentNotBlankTrim(nameAlias, DwException.argumentReject("name alias should not empty"));
+        chargeUser = PreconditionUtil.checkStringArgumentNotBlankTrim(chargeUser, DwException.argumentReject("charge user should not empty"));
         authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
 
+        if (Strings.isBlank(availableRoles)) {
+            availableRoles = "ALL";
+        }
+
+        // TODO
         String user = "hdfs";
 
         Date now = new Date();
@@ -83,8 +94,11 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
         DwSubjectDomain record = new DwSubjectDomain();
         record.setParentId(0L);
         record.setName(name);
+        record.setNameAlias(nameAlias);
         record.setDescription(description);
         record.setAuthority(authority);
+        record.setAvailableRoles(availableRoles);
+        record.setChargeUser(chargeUser);
         record.setCreateUser(user);
         record.setCreateTime(now);
         record.setStatus(Boolean.TRUE);
@@ -131,11 +145,21 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
         // 基本参数校验
         Long id = command.getId();
         String name = command.getName();
+        String nameAlias = command.getNameAlias();
+        String chargeUser = command.getChargeUser();
+        String availableRoles = command.getAvailableRoles();
         String authority = command.getAuthority();
         String description = command.getDescription();
         PreconditionUtil.checkArgument(!Objects.isNull(id), DwException.argumentReject("id should not be null"));
-        authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
         name = PreconditionUtil.checkStringArgumentNotBlankTrim(name, DwException.argumentReject("name should not empty"));
+//        authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
+        nameAlias = PreconditionUtil.checkStringArgumentNotBlankTrim(nameAlias, DwException.argumentReject("name alias should not empty"));
+        chargeUser = PreconditionUtil.checkStringArgumentNotBlankTrim(chargeUser, DwException.argumentReject("charge user should not empty"));
+        authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
+
+        if (Strings.isBlank(availableRoles)) {
+            availableRoles = "ALL";
+        }
 
         // 实体校验
         DwSubjectDomain record = this.dwSubjectDomainMapper.selectById(id);
@@ -149,6 +173,14 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
         DwSubjectDomain exist = this.dwSubjectDomainMapper.selectOne(nameUniqueCheckQuery);
         PreconditionUtil.checkState(Objects.isNull(exist), DwException.stateReject("subjectdomain name aleardy exists"));
 
+        // name alias 唯一性检测
+        QueryWrapper<DwSubjectDomain> nameAliasUniqueCheckQuery = new QueryWrapper<>();
+        nameAliasUniqueCheckQuery.eq("name_alias", nameAlias);
+        nameAliasUniqueCheckQuery.ne("id", id);
+        nameAliasUniqueCheckQuery.eq("status", Boolean.TRUE);
+        DwSubjectDomain nameAliasExist = this.dwSubjectDomainMapper.selectOne(nameUniqueCheckQuery);
+        PreconditionUtil.checkState(Objects.isNull(nameAliasExist), DwException.stateReject("subjectdomain name alias aleardy exists"));
+
         // TODO
         String user = "hdfs";
 
@@ -156,8 +188,11 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
 
         Date now = new Date();
         record.setName(name);
+        record.setNameAlias(nameAlias);
         record.setDescription(description);
         record.setAuthority(authority);
+        record.setAvailableRoles(availableRoles);
+        record.setChargeUser(chargeUser);
         record.setModifyUser(user);
         record.setModifyTime(now);
         record.setVersion(oldVersion + 1);
@@ -171,4 +206,44 @@ public class DwSubjectDomainServiceImpl implements DwSubjectDomainService {
         PreconditionUtil.checkState(1 == i, DwException.stateReject("update subjectdomain failed"));
         return Message.ok();
     }
+
+    @Transactional
+    @Override
+    public Message enable(HttpServletRequest request, Long id) throws DwException {
+        changeEnable(request, id, Boolean.TRUE);
+        return Message.ok();
+    }
+
+    @Transactional
+    @Override
+    public Message disable(HttpServletRequest request, Long id) throws DwException {
+        changeEnable(request, id, Boolean.FALSE);
+        return Message.ok();
+    }
+
+    private void changeEnable(HttpServletRequest request, Long id, Boolean enabled) throws DwException {
+        PreconditionUtil.checkArgument(!Objects.isNull(id), DwException.argumentReject("id should not be null"));
+
+        DwSubjectDomain record = this.dwSubjectDomainMapper.selectById(id);
+        PreconditionUtil.checkState(!Objects.isNull(record), DwException.stateReject("subjectdomain not found"));
+        PreconditionUtil.checkState(record.getStatus(), DwException.stateReject("subjectdomain has been removed"));
+        if (Objects.equals(enabled, record.getEnabled())) {
+            return;
+        }
+
+        // TODO
+        String user = "hdfs";
+
+        Long oldVersion = record.getVersion();
+        record.setModifyUser(user);
+        record.setModifyTime(new Date());
+        record.setEnabled(enabled);
+        record.setVersion(oldVersion + 1);
+        UpdateWrapper<DwSubjectDomain> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", record.getId());
+        updateWrapper.eq("version", oldVersion);
+        int update = this.dwSubjectDomainMapper.update(record, updateWrapper);
+        PreconditionUtil.checkState(1 == update, DwException.stateReject(enabled ? "enable" : "disable" +  " failed"));
+    }
+
 }

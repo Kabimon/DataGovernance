@@ -27,12 +27,7 @@ public class DwSubjectDomainRestfulApi {
         this.dwSubjectDomainService = dwSubjectDomainService;
     }
 
-    /**
-     * 分页获取主题域
-     * @param request req
-     * @return 所有主题域
-     * @throws DwException extends ErrorException
-     */
+    // query paged subjectdomains
     @GET
     @Path("/subjectdomains")
     public Response queryPagedCustomLayers(
@@ -49,7 +44,7 @@ public class DwSubjectDomainRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 新增主题域
+    // create subjectdomain
     @POST
     @Path("/subjectdomains")
     public Response createDwCustomLayer(@Context HttpServletRequest request, DwSubjectDomainCreateCommand command) throws DwException {
@@ -57,7 +52,7 @@ public class DwSubjectDomainRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 查询某个主题域信息
+    // get subjectdomain by id
     @GET
     @Path("/subjectdomains/{id}")
     public Response getLayerById(
@@ -68,7 +63,7 @@ public class DwSubjectDomainRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 删除某个主题域
+    // delete subjectdomain
     @DELETE
     @Path("/subjectdomains/{id}")
     public Response deleteById(
@@ -79,7 +74,7 @@ public class DwSubjectDomainRestfulApi {
         return Message.messageToResponse(message);
     }
 
-    // 更新某个主题域
+    // update subjectdomain
     @PUT
     @Path("/subjectdomains/{id}")
     public Response update(
@@ -89,6 +84,28 @@ public class DwSubjectDomainRestfulApi {
     ) throws DwException {
         command.setId(id);
         Message message = this.dwSubjectDomainService.update(request, command);
+        return Message.messageToResponse(message);
+    }
+
+    // enable subject domain
+    @PUT
+    @Path("/subjectdomains/{id}/enable")
+    public Response enable(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwSubjectDomainService.enable(request, id);
+        return Message.messageToResponse(message);
+    }
+
+    // disable subject domain
+    @PUT
+    @Path("/subjectdomains/{id}/disable")
+    public Response disable(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwSubjectDomainService.disable(request, id);
         return Message.messageToResponse(message);
     }
 }

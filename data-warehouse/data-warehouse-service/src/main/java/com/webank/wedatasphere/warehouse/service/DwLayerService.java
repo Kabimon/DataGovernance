@@ -20,4 +20,8 @@ public interface DwLayerService {
     Message deleteById(HttpServletRequest request, Long id) throws DwException;
 
     Message update(HttpServletRequest request, DwLayerUpdateCommand command) throws DwException;
+
+    Message enable(HttpServletRequest request, Long id) throws DwException;
+
+    Message disable(HttpServletRequest request, Long id) throws DwException;
 }
