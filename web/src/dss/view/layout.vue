@@ -43,7 +43,7 @@ export default {
   mixins: [layoutMixin],
   computed: {
     showHeader() {
-      return this.$route.query.noHeader || location.search.indexOf('noHeader') < 0 
+      return this.$route.query.noHeader || location.search.indexOf('noHeader') < 0
     },
     showFooter() {
       return this.$route.query.noFooter || location.search.indexOf('noFooter') < 0

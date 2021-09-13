@@ -137,7 +137,7 @@ export default function mixinDispatch (requireComponent, requireComponentVue) {
       let moduleConfig = modules[indexPath];
       let mixin = moduleConfig && moduleConfig.mixin;
       if (!vueConfig.mixins) {
-        vueConfig.mixins = [mixin];
+        vueConfig.mixins = mixin ? [mixin] : [];
       } else {
         if (vueConfig.mixins.indexOf(mixin) == -1) {
           vueConfig.mixins.push(mixin);
