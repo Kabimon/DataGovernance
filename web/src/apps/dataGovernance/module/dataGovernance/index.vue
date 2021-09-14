@@ -111,7 +111,6 @@ export default {
 .ds-main-content {
   height: 100%;
   min-height: 100%;
-  margin-left: 250px;
   transition: margin-left 0.3s;
   &.ds-main-content-fold {
     margin-left: 54px;
@@ -145,9 +144,9 @@ export default {
 
 <style lang="scss">
   .main-content-wrap.main-content-wrap.main-content-wrap {
-    margin-left: 0;
+    /* margin-left: ; */
   }
   .main-sidebar.main-sidebar {
-    display: none;
+    /* display: none; */
   }
 </style>

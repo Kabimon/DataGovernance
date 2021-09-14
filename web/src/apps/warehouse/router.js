@@ -7,7 +7,7 @@ export const subAppRoutes = {
   redirect: '/warehouse',
   meta: {
     title: 'DataGovernance',
-    publicPage: true, // 权限公开
+    publicPage: true // 权限公开
   },
   children: []
 }
@@ -19,37 +19,31 @@ export default [
     redirect: '/warehouse/index',
     meta: {
       title: 'Warehouse',
-      publicPage: true,
+      publicPage: true, // false可以隐藏菜单
+      icon: 'ios-browsers'
     },
     component: () => import('./view/linkis/index.vue'),
-    children: [{
-      name: 'Warehouse home',
-      path: '/warehouse/index',
-      component: () => import('./view/home/index.vue'),
-      meta: {
-        title: 'Warehouse home',
-        publicPage: true,
+    children: [
+      {
+        name: 'Warehouse home',
+        path: '/warehouse/index',
+        component: () => import('./view/home/index.vue'),
+        meta: {
+          title: 'Warehouse home',
+          publicPage: true,
+          icon: 'ios-paper'
+        }
       },
-    },
-    {
-      name: 'Warehouse home2',
-      path: '/warehouse/linkis',
-      component: () => import('./view/home/second.vue'),
-      meta: {
-        title: 'Warehouse home2',
-        publicPage: true,
-      },
-    },
-    {
-      name: 'Warehouse home3',
-      path: '/warehouse/iframe',
-      // component: () => import('./view/home/index.vue'),
-      meta: {
-        title: 'Warehouse home3',
-        publicPage: true,
-        iframeUrl: 'https://iview.github.io/'
-      },
-    }
+      {
+        name: 'Warehouse home2',
+        path: '/warehouse/second',
+        component: () => import('./view/home/second.vue'),
+        meta: {
+          title: 'Warehouse home2',
+          publicPage: true,
+          icon: 'ios-paper'
+        }
+      }
     ]
   }
 ]

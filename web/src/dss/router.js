@@ -25,7 +25,7 @@ export default [
       import('./view/logPage/index.vue')
   },
   {
-    path: 'commonIframe',
+    path: '/commonIframe',
     name: 'commonIframe',
     meta: {
       title: 'DSS Component',
