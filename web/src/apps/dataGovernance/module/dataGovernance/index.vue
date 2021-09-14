@@ -144,10 +144,5 @@ export default {
 </style>
 
 <style lang="scss">
-  .main-content-wrap.main-content-wrap.main-content-wrap {
-    margin-left: 0;
-  }
-  .main-sidebar.main-sidebar {
-    display: none;
-  }
+
 </style>
