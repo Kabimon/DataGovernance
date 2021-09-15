@@ -1,20 +1,11 @@
 {
-    "linkis": {
-        "routes": "apps/warehouse/router",
-        "module": "apps/warehouse/module",
-        "i18n": {
-            "en": "apps/warehouse/i18n/common/en.json",
-            "zh-CN": "apps/warehouse/i18n/common/zh.json"
-        },
-        "header": "apps/warehouse/module/header"
+  "dataGovernance": {
+    "routes": "apps/dataGovernance/router",
+    "module": "apps/dataGovernance/module",
+    "i18n": {
+      "en": "apps/dataGovernance/i18n/en.json",
+      "zh-CN": "apps/dataGovernance/i18n/zh.json"
     },
-    "dataGovernance": {
-      "routes": "apps/dataGovernance/router",
-      "module": "apps/dataGovernance/module",
-      "i18n": {
-        "en": "apps/dataGovernance/i18n/en.json",
-        "zh-CN": "apps/dataGovernance/i18n/zh.json"
-      },
-      "header": "apps/dataGovernance/module/header"
-    }
+    "header": "apps/dataGovernance/module/header"
+  }
 }
