@@ -2,9 +2,8 @@ export const subAppRoutes = {
   path: '',
   name: 'layout',
   component: () => import('./view/layout.vue'),
-  // redirect: '/newHome',
   // 重定向到 管理台页面
-  redirect: '/warehouse',
+  redirect: '/dataGovernance',
   meta: {
     title: 'DataGovernance',
     publicPage: true, // 权限公开
@@ -25,7 +24,7 @@ export default [
       import('./view/logPage/index.vue')
   },
   {
-    path: 'commonIframe',
+    path: '/commonIframe',
     name: 'commonIframe',
     meta: {
       title: 'DSS Component',

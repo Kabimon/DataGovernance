@@ -9,10 +9,11 @@ import lombok.ToString;
 @ToString
 public class DwLayerCreateCommand {
     private String name;
-    private String nameAlias;
-    private String availableDbs;
-    private String autoCollectStrategy;
-    private String chargeUser;
+    private String enName;
+    private String owner;
+    private String principalName;
+    private String databases;
     private String description;
-    private String authority;
+    private Integer order;
+//    private String autoCollectStrategy;
 }

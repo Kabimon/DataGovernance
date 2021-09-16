@@ -1,22 +1,20 @@
 package com.webank.wedatasphere.warehouse.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
-@Setter
-@Getter
-@ToString
-@NoArgsConstructor
-public class DwLayerListItemDTO extends DwLayerDTO {
+@Data
+public class DwLayerListItemDTO {
+    private Long id;
+    private String name;
+    private String enName;
     private Boolean preset;
-    private Boolean enabled;
-    private String createUser;
+    private String description;
+    private String principalName;
+    private String dbs;
+    private Integer sort;
+    private Boolean isAvailable;
     private Date createTime;
-    private String modifyUser;
-    private Date modifyTime;
+    private Date updateTime;
 }

@@ -12,6 +12,10 @@ import lombok.ToString;
 public class DwLayerDTO {
     private Long id;
     private String name;
+    private String enName;
+    private Boolean preset;
     private String description;
-    private String authority;
+    private String principalName;
+    private String dbs;
+    private Integer sort;
 }

@@ -1,36 +1,61 @@
 <template>
-  <Submenu
-    v-if="menu.list && menu.list.length >=1"
-    :name="menu.name"
-  >
-    <template slot="title">
-      <Icon :type="menu.icon"></Icon>
-      {{menu.title}}
-    </template>
-    <sidebar-sub-menu
-      v-for="item in menu.list" 
-      :key="item.menuId"
-      :menu="item"
-    />
-  </Submenu>
-  <Menu-item v-else :name="menu.name" >
-    <Icon :type="menu.icon" v-if="menu.icon"></Icon>
-    {{menu.title}}
-  </Menu-item>
+  <div v-if="menu.meta.publicPage">
+    <Menu-item v-if="coverRoute" :name="coverRoute.path">
+      <Icon :type="coverRoute.meta.icon" v-if="coverRoute.meta.icon"></Icon>
+      {{ coverRoute.meta.title }}
+      <router-link :to="coverRoute.path" class="menu-item"> </router-link>
+    </Menu-item>
+    <Submenu
+      v-else-if="menu.children && menu.children.length >= 1"
+      :name="menu.path"
+    >
+      <template slot="title">
+        <Icon :type="menu.meta.icon"></Icon>
+        {{ menu.meta.title }}
+      </template>
+      <sidebar-sub-menu
+        v-for="item in menu.children"
+        :key="item.path"
+        :menu="item"
+      />
+    </Submenu>
+    <Menu-item v-else :name="menu.path">
+      <Icon :type="menu.meta.icon" v-if="menu.meta.icon"></Icon>
+      {{ menu.meta.title }}
+      <router-link :to="menu.path" class="menu-item"> </router-link>
+    </Menu-item>
+  </div>
 </template>
 <script>
-import SidebarSubMenu from './sidebar-sub-menu.vue';
 export default {
   name: 'sidebar-sub-menu',
-  components: {
-    SidebarSubMenu
-  },
   props: {
     menu: {
       type: Object,
-      required: true
-    }
-  }
-};
+      required: true,
+    },
+  },
+  computed: {
+    coverRoute: function () {
+      if (this.menu.meta.cover) {
+        if (this.menu.children && this.menu.children.length >= 1) {
+          return this.menu.children.find((item) => {
+            return item.name === this.menu.meta.cover
+          })
+        }
+      }
+      return false
+    },
+  },
+}
 </script>
-
+<style lang="scss" scoped>
+.menu-item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  color: inherit;
+}
+</style>

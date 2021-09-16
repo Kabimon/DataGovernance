@@ -76,7 +76,7 @@ export default {
 .main-content-wrap {
   position: relative;
   padding-top: 54px;
-  margin-left: 230px;
+  margin-left: 240px;
   height: 100%;
   background: #f1f4f5;
   &.no-margin {

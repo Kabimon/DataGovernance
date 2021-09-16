@@ -29,6 +29,7 @@ public class DwLayerRestfulApi {
     }
 
     // list all preset layers
+    @GET
     @Path("/layers/preset")
     public Response getAllPresetLayers(@Context HttpServletRequest request) throws DwException {
         Message message = this.dwLayerService.getAllPresetLayers(request);

@@ -1,17 +1,7 @@
 <template>
-  <div style="height: 100%;">
-    <navMenu
-      :menuFold="menuFold"
-      :treeNodes="projectsTree"
-      :treeCurrentId="currentTreeId"
-      @on-menu-toggle="handleMenuToggle"
-      @handleApiChoosed="onClickMenu"
-    />
+  <div style="height: 100%">
     <div
       class="ds-main-content"
-      :class="{
-        'ds-main-content-fold': menuFold
-      }"
     >
       <div class="ds-main-container">
         <div class="ds-breadcumb">
@@ -25,93 +15,99 @@
   </div>
 </template>
 <script>
-import navMenu from "../common/navMenu.vue";
+// import navMenu from '../common/navMenu.vue'
 // import storage from "../../utils/storage";
 export default {
-  components: {
-    navMenu
-  },
-  data() {
-    return {
-      menuFold: false,
-      projectsTree: [
-        {
-          id: 1,
-          name: "数据资产",
-          children: [
-            { id: 11, name: "数据总览", pathName: "dataGovernance/overview" },
-            { id: 12, name: "数据资产目录", pathName: "dataGovernance/assets" }
-          ]
-        },
-        {
-          id: 2,
-          name: "元数据管理",
-          children: [{ id: 21, name: "元数据采集" }]
-        },
-        {
-          id: 3,
-          name: "数据权限",
-          children: [{ id: 31, name: "数据权限管理" }]
-        },
-        {
-          id: 4,
-          name: "数仓规划",
-          children: [
-            { id: 41, name: "主题域配置" },
-            { id: 42, name: "分层配置" }
-          ]
-        },
-        { id: 5, name: "数据质量", children: [] },
-        { id: 6, name: "数据安全", children: [] }
-      ],
-      currentTreeId: 1,
-      title: this.$t("message.dataGovernance.dataOverview")
-    };
-  },
+
+  // components: {
+  //   navMenu,
+  // },
+  // data() {
+  //   return {
+  //     menuFold: false,
+  //     projectsTree: [
+  //       {
+  //         id: 1,
+  //         name: '数据资产',
+  //         children: [
+  //           { id: 11, name: '数据总览', pathName: 'dataGovernance/overview' },
+  //           { id: 12, name: '数据资产目录', pathName: 'dataGovernance/assets' },
+  //         ],
+  //       },
+  //       {
+  //         id: 2,
+  //         name: '元数据管理',
+  //         children: [{ id: 21, name: '元数据采集' }],
+  //       },
+  //       {
+  //         id: 3,
+  //         name: '数据权限',
+  //         children: [{ id: 31, name: '数据权限管理' }],
+  //       },
+  //       {
+  //         id: 4,
+  //         name: '数仓规划',
+  //         children: [
+  //           { id: 41, name: '主题域配置' },
+  //           { id: 42, name: '分层配置' },
+  //         ],
+  //       },
+  //       { id: 5, name: '数据质量', children: [] },
+  //       { id: 6, name: '数据安全', children: [] },
+  //     ],
+  //     currentTreeId: 1,
+  //   }
+  // },
+  // computed: {
+  //   searchScroll() {
+  //     return this.$route.name === 'dataGovernance/assets/search'
+  //   },
+  // },
+  // mounted() {
+  //   let pathName = this.$route.name
+  //   if (pathName !== 'dataGovernance/overview') {
+  //     sessionStorage.removeItem('searchTbls')
+  //     const workspaceId = this.$route.query.workspaceId
+  //     this.$router.push({
+  //       name: 'dataGovernance/overview',
+  //       query: { workspaceId },
+  //     })
+  //   }
+  // },
   computed: {
-    searchScroll() {
-      return this.$route.name === "dataGovernance/assets/search";
-    }
-  },
-  mounted() {
-    let pathName = this.$route.name;
-    if (pathName !== "dataGovernance/overview") {
-      sessionStorage.removeItem("searchTbls");
-      const workspaceId = this.$route.query.workspaceId;
-      this.$router.push({
-        name: "dataGovernance/overview",
-        query: { workspaceId }
-      });
-    }
-  },
-  methods: {
-    handleMenuToggle() {
-      this.menuFold = !this.menuFold;
+    title() {
+      return this.$route.meta.title
     },
-    onClickMenu(node) {
-      const { id, pathName, name } = node;
-      this.currentTreeId = id;
-      const workspaceId = this.$route.query.workspaceId;
-      if (id > 10) {
-        this.title = name;
-      }
-      if (pathName) {
-        this.$router.push({
-          name: pathName,
-          query: { workspaceId }
-        });
-      }
-    }
-  }
-};
+  },
+
+  // methods: {
+  //   handleMenuToggle() {
+  //     this.menuFold = !this.menuFold
+  //   },
+  //   onClickMenu(node) {
+  //     const { id, pathName, name } = node
+  //     this.currentTreeId = id
+  //     const workspaceId = this.$route.query.workspaceId
+  //     if (id > 10) {
+  //       this.title = name
+  //     }
+  //     if (pathName) {
+  //       this.$router.push({
+  //         name: pathName,
+  //         query: { workspaceId },
+  //       })
+  //     }
+  //   },
+  // },
+}
 </script>
+<style lang="scss" src="@/apps/dataGovernance/assets/styles/console.scss"></style>
 <style lang="scss" scoped>
-@import "@/common/style/variables.scss";
+@import '@/common/style/variables.scss';
 
 .ds-main-content {
   height: 100%;
   min-height: 100%;
-  margin-left: 250px;
   transition: margin-left 0.3s;
   &.ds-main-content-fold {
     margin-left: 54px;
@@ -141,8 +137,4 @@ export default {
     }
   }
 }
-</style>
-
-<style lang="scss">
-
 </style>

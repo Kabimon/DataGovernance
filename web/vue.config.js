@@ -18,18 +18,18 @@
 // vue.config.js
 const path = require('path')
 const fs = require('fs')
-const FileManagerPlugin = require('filemanager-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 // const CspHtmlWebpackPlugin = require('csp-html-webpack-plugin');
-const VirtualModulesPlugin = require('webpack-virtual-modules');
-const webpack = require("webpack");
+const VirtualModulesPlugin = require('webpack-virtual-modules')
+const webpack = require('webpack')
 const apps = require('./src/config.json')
 
 const getVersion = () => {
   const pkgPath = path.join(__dirname, './package.json')
-  let pkg = fs.readFileSync(pkgPath);
-  pkg = JSON.parse(pkg);
-  return pkg.version;
+  let pkg = fs.readFileSync(pkgPath)
+  pkg = JSON.parse(pkg)
+  return pkg.version
 }
 
 // 指定module打包, 不指定则打包全部子应用
@@ -53,8 +53,12 @@ let headers = []
 
 Object.entries(apps).forEach(item => {
   if (item[1].module) {
-    requireComponent.push(`require.context('@/${item[1].module}',true,/([a-z|A-Z])+\\/index\.js$/)`)
-    requireComponentVue.push(`require.context('@/${item[1].module}',true,/([a-z|A-Z])+.vue$/)`)
+    requireComponent.push(
+      `require.context('@/${item[1].module}',true,/([a-z|A-Z])+\\/index\.js$/)`
+    )
+    requireComponentVue.push(
+      `require.context('@/${item[1].module}',true,/([a-z|A-Z])+.vue$/)`
+    )
   }
   // 获取个模块header
   if (item[1].header) {
@@ -67,13 +71,11 @@ Object.entries(apps).forEach(item => {
   // 处理国际化
   if (item[1].i18n) {
     appsI18n.push(`{
-      'zh-CN': require('@/${item[1].i18n["zh-CN"]}'),
+      'zh-CN': require('@/${item[1].i18n['zh-CN']}'),
       'en': require('@/${item[1].i18n['en']}')
     }`)
   }
 })
-
-console.log('appsRoutes', appsRoutes);
 
 let buildDynamicModules = Object.values(apps)
 buildDynamicModules = JSON.stringify(buildDynamicModules)
@@ -86,16 +88,17 @@ const virtualModules = new VirtualModulesPlugin({
     appsI18n: [${appsI18n.join(',')}],
     requireComponent: [${requireComponent.join(',')}],
     requireComponentVue: [${requireComponentVue.join(',')}],
-    microModule: ${JSON.stringify(process.env.npm_config_micro_module) || false},
+    microModule: ${JSON.stringify(process.env.npm_config_micro_module) ||
+      false},
     headers:{${headers.join(',')}}
   };`
-});
+})
 
 const plugins = [
   virtualModules,
   new webpack.ProvidePlugin({
-    jQuery: "jquery/dist/jquery.min.js",
-    $: "jquery/dist/jquery.min.js"
+    jQuery: 'jquery/dist/jquery.min.js',
+    $: 'jquery/dist/jquery.min.js'
   })
 ]
 
@@ -143,7 +146,7 @@ function resolve(dir) {
 module.exports = {
   publicPath: './',
   outputDir: 'dist/dist',
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     // set svg-sprite-loader
     config.module
       .rule('svg')
@@ -160,21 +163,30 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
-    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'sandbox' || process.env.NODE_ENV === 'bdp') {
-      config.plugin('compress').use(FileManagerPlugin, [{
-        onEnd: {
-          copy: [
-            { source: './config.sh', destination: `./dist` },
-            { source: './install.sh', destination: `./dist` }
-          ],
-          // 先删除根目录下的zip包
-          delete: [`./wedatasphere-linkis-${getVersion()}-dist.zip`],
-          // 将dist文件夹下的文件进行打包
-          archive: [
-            { source: './dist', destination: `./wedatasphere-linkis-${getVersion()}-dist.zip` },
-          ]
-        },
-      }])
+    if (
+      process.env.NODE_ENV === 'production' ||
+      process.env.NODE_ENV === 'sandbox' ||
+      process.env.NODE_ENV === 'bdp'
+    ) {
+      config.plugin('compress').use(FileManagerPlugin, [
+        {
+          onEnd: {
+            copy: [
+              { source: './config.sh', destination: `./dist` },
+              { source: './install.sh', destination: `./dist` }
+            ],
+            // 先删除根目录下的zip包
+            delete: [`./wedatasphere-linkis-${getVersion()}-dist.zip`],
+            // 将dist文件夹下的文件进行打包
+            archive: [
+              {
+                source: './dist',
+                destination: `./wedatasphere-linkis-${getVersion()}-dist.zip`
+              }
+            ]
+          }
+        }
+      ])
     }
   },
   configureWebpack: {

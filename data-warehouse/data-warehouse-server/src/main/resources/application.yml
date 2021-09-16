@@ -6,7 +6,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://124.70.31.149:20303/eureka/
+      defaultZone: http://localhost:20303/eureka/
 
 management:
   endpoints:
@@ -15,3 +15,6 @@ management:
         include: refresh,info
 logging:
   config: classpath:log4j2.xml
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

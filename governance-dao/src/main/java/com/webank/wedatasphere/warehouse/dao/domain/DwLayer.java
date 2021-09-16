@@ -4,57 +4,69 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.webank.wedatasphere.warehouse.dao.interceptor.NameAttachWorkspaceTrans;
+import com.webank.wedatasphere.warehouse.dao.domain.common.DssWorkspaceEntity;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
+@Data
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@TableName("g8e_dw_layer")
-public class DwLayer {
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@TableName("dss_datawarehouse_layer")
+public class DwLayer extends DssWorkspaceEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @NameAttachWorkspaceTrans
     private String name;
 
-    @TableField(value = "name_alias")
-    private String nameAlias;
+    @TableField(value = "en_name")
+    private String enName;
 
     private String description;
 
-    private String authority;
+    // 授权的角色
+    @TableField(value = "principal_name")
+    private String principalName;
 
+    // 是否预置主题
     private Boolean preset;
 
-    private Boolean enabled;
+    @TableField(value = "is_available")
+    private Boolean isAvailable;
 
-    @TableField(value = "auto_collect_strategy")
-    private String autoCollectStrategy;
+    // 为空代表所有库
+    @TableField(value = "dbs")
+    private String dbs;
 
-    @TableField(value = "available_dbs")
-    private String availableDbs;
+    // 负责人
+    private String owner;
 
-    @TableField(value = "charge_user")
-    private String chargeUser;
+    private Integer sort;
 
-    @TableField(value = "create_user")
-    private String createUser;
+    // 创建人
+//    @TableField(value = "create_user")
+//    private String createUser;
 
     @TableField(value = "create_time")
     private Date createTime;
 
-    @TableField(value = "modify_user")
-    private String modifyUser;
+//    @TableField(value = "modify_user")
+//    private String modifyUser;
 
-    @TableField(value = "modify_time")
-    private Date modifyTime;
+    @TableField(value = "update_time")
+    private Date updateTime;
 
     private Boolean status;
 
-    private Long version;
+    @TableField(value = "lock_version")
+    private Long lockVersion;
 }
