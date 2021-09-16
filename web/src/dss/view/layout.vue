@@ -5,9 +5,9 @@
       @clear-session="clearSession"
       @set-init="setInit"></layout-header>
 
-    <sidebar v-if="showSideBar" />
+    <sidebar />
 
-    <div :class="getClass()">
+    <div class="main-content-wrap">
       <iframe
         v-if="showIframe"
         :src="$route.meta.iframeUrl"
@@ -42,9 +42,6 @@ export default {
   },
   mixins: [layoutMixin],
   computed: {
-    showSideBar() {
-      return location.hash.indexOf('dataGovernance/') < 0
-    },
     showHeader() {
       return this.$route.query.noHeader || location.search.indexOf('noHeader') < 0
     },
@@ -61,13 +58,6 @@ export default {
   methods: {
     setInit() {
       this.isInit = true;
-    },
-    getClass() {
-      if (location.hash.indexOf('warehouse/') > -1) {
-        return 'main-content-wrap'
-      } else {
-        return 'main-content-wrap no-margin'
-      }
     }
   },
 };
@@ -76,11 +66,8 @@ export default {
 .main-content-wrap {
   position: relative;
   padding-top: 54px;
-  margin-left: 240px;
+  margin-left: 230px;
   height: 100%;
   background: #f1f4f5;
-  &.no-margin {
-     margin-left: 0;
-  }
 }
 </style>
