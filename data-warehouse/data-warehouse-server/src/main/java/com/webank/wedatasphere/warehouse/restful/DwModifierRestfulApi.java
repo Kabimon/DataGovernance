@@ -1,0 +1,110 @@
+package com.webank.wedatasphere.warehouse.restful;
+
+import com.webank.wedatasphere.linkis.server.Message;
+import com.webank.wedatasphere.warehouse.cqe.*;
+import com.webank.wedatasphere.warehouse.exception.DwException;
+import com.webank.wedatasphere.warehouse.service.DwModifierService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@Component
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/governance/warehouse")
+public class DwModifierRestfulApi {
+
+    private final DwModifierService dwModifierService;
+
+    @Autowired
+    public DwModifierRestfulApi(DwModifierService dwModifierService) {
+        this.dwModifierService = dwModifierService;
+    }
+
+    // query paged modifiers
+    @GET
+    @Path("/modifiers")
+    public Response queryPagedDecorations(
+            @Context HttpServletRequest request,
+            @QueryParam("page") Integer page,
+            @QueryParam("size") Integer size,
+            @QueryParam("typeName") String typeName
+    )throws DwException {
+        final DwModifierQueryCommand command = new DwModifierQueryCommand();
+        command.setTypeName(typeName);
+        command.setPage(page);
+        command.setSize(size);
+        Message message = this.dwModifierService.queryPage(request, command);
+        return Message.messageToResponse(message);
+    }
+
+    // create dw decoration word
+    @POST
+    @Path("/modifiers")
+    public Response create(@Context HttpServletRequest request, DwModifierCreateCommand command) throws DwException {
+        Message message = this.dwModifierService.create(request, command);
+        return Message.messageToResponse(message);
+    }
+
+    // fetch one decoration details by id
+    @GET
+    @Path("/modifiers/{id}")
+    public Response getById(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwModifierService.getById(request, id);
+        return Message.messageToResponse(message);
+    }
+
+    // remove decoration logic
+    @DELETE
+    @Path("/modifiers/{id}")
+    public Response deleteById(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwModifierService.deleteById(request, id);
+        return Message.messageToResponse(message);
+    }
+
+    // update
+    @PUT
+    @Path("/modifiers/{id}")
+    public Response update(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id,
+            DwModifierUpdateCommand command
+    ) throws DwException {
+        command.setId(id);
+        Message message = this.dwModifierService.update(request, command);
+        return Message.messageToResponse(message);
+    }
+
+    // enable modifier
+    @PUT
+    @Path("/modifiers/{id}/enable")
+    public Response enable(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwModifierService.enable(request, id);
+        return Message.messageToResponse(message);
+    }
+
+    // disable modifier
+    @PUT
+    @Path("/modifiers/{id}/disable")
+    public Response disable(
+            @Context HttpServletRequest request,
+            @PathParam("id") Long id
+    ) throws DwException {
+        Message message = this.dwModifierService.disable(request, id);
+        return Message.messageToResponse(message);
+    }
+}

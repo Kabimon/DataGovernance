@@ -1,11 +1,9 @@
 package com.webank.wedatasphere.warehouse.restful;
 
 import com.webank.wedatasphere.linkis.server.Message;
-import com.webank.wedatasphere.warehouse.cqe.DwLayerCreateCommand;
-import com.webank.wedatasphere.warehouse.cqe.DwLayerQueryCommand;
-import com.webank.wedatasphere.warehouse.cqe.DwLayerUpdateCommand;
+import com.webank.wedatasphere.warehouse.cqe.*;
 import com.webank.wedatasphere.warehouse.exception.DwException;
-import com.webank.wedatasphere.warehouse.service.DwLayerService;
+import com.webank.wedatasphere.warehouse.service.DwThemeDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,104 +17,94 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/governance/warehouse")
-public class DwLayerRestfulApi {
+public class DwThemeDomainRestfulApi {
 
-    private final DwLayerService dwLayerService;
+    private final DwThemeDomainService dwThemeDomainService;
 
     @Autowired
-    public DwLayerRestfulApi(DwLayerService dwLayerService) {
-        this.dwLayerService = dwLayerService;
+    public DwThemeDomainRestfulApi(DwThemeDomainService dwThemeDomainService) {
+        this.dwThemeDomainService = dwThemeDomainService;
     }
 
-    // list all preset layers
+    // query paged theme domains
     @GET
-    @Path("/layers/preset")
-    public Response getAllPresetLayers(@Context HttpServletRequest request) throws DwException {
-        Message message = this.dwLayerService.getAllPresetLayers(request);
-        return Message.messageToResponse(message);
-    }
-
-    // query paged custom layers
-    @GET
-    @Path("/layers/custom")
+    @Path("/themedomains")
     public Response queryPagedCustomLayers(
             @Context HttpServletRequest request,
             @QueryParam("page") Integer page,
             @QueryParam("size") Integer size,
-            @QueryParam("name") String name,
-            @QueryParam("enabled") Boolean enabled
+            @QueryParam("name") String name
     )throws DwException {
-        final DwLayerQueryCommand command = new DwLayerQueryCommand();
+        final DwThemeDomainQueryCommand command = new DwThemeDomainQueryCommand();
         command.setName(name);
-        command.setEnabled(enabled);
         command.setPage(page);
         command.setSize(size);
-        Message message = this.dwLayerService.queryPagedCustomLayers(request, command);
+        Message message = this.dwThemeDomainService.queryPage(request, command);
         return Message.messageToResponse(message);
     }
 
-    // create custom layer
+    // create theme domain
     @POST
-    @Path("/layers/custom")
-    public Response createDwCustomLayer(@Context HttpServletRequest request, DwLayerCreateCommand command) throws DwException {
-        Message message = this.dwLayerService.createDwCustomLayer(request, command);
+    @Path("/themedomains")
+    public Response createDwCustomLayer(@Context HttpServletRequest request, DwThemeDomainCreateCommand command) throws DwException {
+        Message message = this.dwThemeDomainService.create(request, command);
         return Message.messageToResponse(message);
     }
 
-    // get layer by id
+    // get theme domain by id
     @GET
-    @Path("/layers/{id}")
+    @Path("/themedomains/{id}")
     public Response getLayerById(
             @Context HttpServletRequest request,
             @PathParam("id") Long id
     ) throws DwException {
-        Message message = this.dwLayerService.getLayerById(request, id);
+        Message message = this.dwThemeDomainService.getById(request, id);
         return Message.messageToResponse(message);
     }
 
-    // delete layer
+    // delete theme domain
     @DELETE
-    @Path("/layers/{id}")
+    @Path("/themedomains/{id}")
     public Response deleteById(
             @Context HttpServletRequest request,
             @PathParam("id") Long id
     ) throws DwException {
-        Message message = this.dwLayerService.deleteById(request, id);
+        Message message = this.dwThemeDomainService.deleteById(request, id);
         return Message.messageToResponse(message);
     }
 
-    // update layer
+    // update theme domain
     @PUT
-    @Path("/layers/{id}")
+    @Path("/themedomains/{id}")
     public Response update(
             @Context HttpServletRequest request,
             @PathParam("id") Long id,
-            DwLayerUpdateCommand command
+            DwThemeDomainUpdateCommand command
     ) throws DwException {
         command.setId(id);
-        Message message = this.dwLayerService.update(request, command);
+        Message message = this.dwThemeDomainService.update(request, command);
         return Message.messageToResponse(message);
     }
 
-    // enable layer
+    // enable theme domain
     @PUT
-    @Path("/layers/{id}/enable")
+    @Path("/themedomains/{id}/enable")
     public Response enable(
             @Context HttpServletRequest request,
             @PathParam("id") Long id
     ) throws DwException {
-        Message message = this.dwLayerService.enable(request, id);
+        Message message = this.dwThemeDomainService.enable(request, id);
         return Message.messageToResponse(message);
     }
 
-    // disable layer
+    // disable theme domain
     @PUT
-    @Path("/layers/{id}/disable")
+    @Path("/themedomains/{id}/disable")
     public Response disable(
             @Context HttpServletRequest request,
             @PathParam("id") Long id
     ) throws DwException {
-        Message message = this.dwLayerService.disable(request, id);
+        Message message = this.dwThemeDomainService.disable(request, id);
         return Message.messageToResponse(message);
     }
 }

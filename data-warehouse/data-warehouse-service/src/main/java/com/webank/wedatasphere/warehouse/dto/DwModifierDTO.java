@@ -5,17 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Setter
 @Getter
 @ToString
 @NoArgsConstructor
-public class DwLayerDTO {
+public class DwModifierDTO {
     private Long id;
-    private String name;
-    private String enName;
-    private Boolean preset;
+    private String modifierType;
+    private String layerArea;
+    private String themeArea;
     private String description;
-    private String principalName;
-    private String dbs;
-    private Integer sort;
+    private List<DwModifierListDTO> list;
 }

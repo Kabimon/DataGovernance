@@ -4,26 +4,35 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.webank.wedatasphere.warehouse.dao.interceptor.NameAttachWorkspaceTrans;
 import com.webank.wedatasphere.warehouse.dao.domain.common.DssWorkspaceEntity;
-import lombok.*;
-import lombok.experimental.Accessors;
+import com.webank.wedatasphere.warehouse.dao.interceptor.NameAttachWorkspaceTrans;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
-@Data
 @Getter
 @Setter
 @ToString
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("dss_datawarehouse_layer")
-public class DwLayer extends DssWorkspaceEntity {
+@TableName("dss_datawarehouse_statistical_period")
+public class DwStatisticalPeriod extends DssWorkspaceEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    @TableField(value = "theme_domain_id")
+    private Long themeDomainId;
+
+//    @TableField(value = "theme_area")
+//    private String themeArea;
+
+    @TableField(value = "layer_id")
+    private Long layerId;
+
+//    @TableField(value = "layer_area")
+//    private String layerArea;
 
     @NameAttachWorkspaceTrans
     private String name;
@@ -33,26 +42,22 @@ public class DwLayer extends DssWorkspaceEntity {
 
     private String description;
 
-    // 授权的角色
+    @TableField(value = "start_time_formula")
+    private String startTimeFormula;
+
+    @TableField(value = "end_time_formula")
+    private String endTimeFormula;
+
+    // 授权的名字：userName、roleName
     @TableField(value = "principal_name")
     private String principalName;
-
-    // 是否预置主题
-    private Boolean preset;
 
     @TableField(value = "is_available")
     private Boolean isAvailable;
 
-    // 为空代表所有库
-    @TableField(value = "dbs")
-    private String dbs;
-
     // 负责人
     private String owner;
 
-    private Integer sort;
-
-    // 创建人
 //    @TableField(value = "create_user")
 //    private String createUser;
 

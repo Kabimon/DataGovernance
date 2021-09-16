@@ -5,16 +5,15 @@ import lombok.*;
 import java.util.Date;
 
 @Data
-public class DwLayerListItemDTO {
+public class DwThemeDomainListItemDTO {
     private Long id;
     private String name;
     private String enName;
-    private Boolean preset;
-    private String description;
+    private String owner;
     private String principalName;
-    private String dbs;
     private Integer sort;
-    private Boolean isAvailable;
+    private String description;
     private Date createTime;
     private Date updateTime;
+    private Boolean preset;
 }

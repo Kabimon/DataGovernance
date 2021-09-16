@@ -9,21 +9,22 @@ import com.webank.wedatasphere.warehouse.cqe.DwLayerCreateCommand;
 import com.webank.wedatasphere.warehouse.cqe.DwLayerQueryCommand;
 import com.webank.wedatasphere.warehouse.cqe.DwLayerUpdateCommand;
 import com.webank.wedatasphere.warehouse.dao.domain.DwLayer;
-import com.webank.wedatasphere.warehouse.dao.domain.DwSubjectDomain;
 import com.webank.wedatasphere.warehouse.dto.DwLayerDTO;
 import com.webank.wedatasphere.warehouse.dto.DwLayerListItemDTO;
 import com.webank.wedatasphere.warehouse.dto.PageInfo;
 import com.webank.wedatasphere.warehouse.exception.DwException;
 import com.webank.wedatasphere.warehouse.dao.mapper.DwLayerMapper;
-import com.webank.wedatasphere.warehouse.mapper.DwLayerModelMapper;
+//import com.webank.wedatasphere.warehouse.mapper.DwLayerModelMapper;
 import com.webank.wedatasphere.warehouse.service.DwLayerService;
 import com.webank.wedatasphere.warehouse.utils.PreconditionUtil;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -42,45 +43,56 @@ public class DwLayerServiceImpl implements DwLayerService {
     @Override
     public Message createDwCustomLayer(HttpServletRequest request, DwLayerCreateCommand command) throws DwException {
         String name = command.getName();
-        String nameAlias = command.getNameAlias();
-        String availableDbs = command.getAvailableDbs();
-        String autoCollectStrategy = command.getAutoCollectStrategy();
-        String chargeUser = command.getChargeUser();
+        String enName = command.getEnName();
+        String databases = command.getDatabases();
+        Integer order = command.getOrder();
+//        String autoCollectStrategy = command.getAutoCollectStrategy();
+        String owner = command.getOwner();
         String description = command.getDescription();
-        String authority = command.getAuthority();
+        String principalName = command.getPrincipalName();
 
         name = PreconditionUtil.checkStringArgumentNotBlankTrim(name, DwException.argumentReject("name should not empty"));
-        nameAlias = PreconditionUtil.checkStringArgumentNotBlankTrim(nameAlias, DwException.argumentReject("name alias should not empty"));
-        chargeUser = PreconditionUtil.checkStringArgumentNotBlankTrim(chargeUser, DwException.argumentReject("charge user should not empty"));
+        enName = PreconditionUtil.checkStringArgumentNotBlankTrim(enName, DwException.argumentReject("name alias should not empty"));
+        owner = PreconditionUtil.checkStringArgumentNotBlankTrim(owner, DwException.argumentReject("charge user should not empty"));
 //        authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
-        if (Strings.isBlank(availableDbs)) {
-            availableDbs = "ALL";
+        QueryWrapper<DwLayer> nameUniqueCheckQuery = new QueryWrapper<>();
+        nameUniqueCheckQuery.eq("name", name);
+        nameUniqueCheckQuery.eq("status", Boolean.TRUE);
+        DwLayer exist = this.dwLayerMapper.selectOne(nameUniqueCheckQuery);
+        PreconditionUtil.checkState(Objects.isNull(exist), DwException.stateReject("layer name aleardy exists"));
+
+        if (Strings.isBlank(databases)) {
+            databases = "ALL";
+        }
+        if (Objects.isNull(order)) {
+            order = 1;
         }
 
-        if (Strings.isBlank(autoCollectStrategy)) {
-            autoCollectStrategy = "{}";
-        }
+//        if (Strings.isBlank(autoCollectStrategy)) {
+//            autoCollectStrategy = "{}";
+//        }
 
-        // TODO
-        String user = "hdfs";
+//        String user = "hdfs";
 
         Date now = new Date();
 
         DwLayer layer = new DwLayer();
         layer.setName(name);
-        layer.setNameAlias(nameAlias);
+        layer.setEnName(enName);
         layer.setDescription(description);
-        layer.setAuthority(authority);
-        layer.setChargeUser(chargeUser);
-        layer.setAvailableDbs(availableDbs);
-        layer.setAutoCollectStrategy(autoCollectStrategy);
+        layer.setPrincipalName(principalName);
+        layer.setOwner(owner);
+        layer.setDbs(databases);
+//        layer.setAutoCollectStrategy(autoCollectStrategy);
         // 设置为 FALSE ，因为是自定义分层
         layer.setPreset(Boolean.FALSE);
-        layer.setEnabled(Boolean.TRUE);
-        layer.setCreateUser(user);
+        layer.setIsAvailable(Boolean.TRUE);
+//        layer.setCreateUser(user);
+        layer.setSort(order);
         layer.setCreateTime(now);
+        layer.setUpdateTime(now);
         layer.setStatus(Boolean.TRUE);
-        layer.setVersion(1L);
+        layer.setLockVersion(1L);
 
         int insert = this.dwLayerMapper.insert(layer);
         PreconditionUtil.checkState(1 == insert, DwException.stateReject("create dw layer failed"));
@@ -96,7 +108,9 @@ public class DwLayerServiceImpl implements DwLayerService {
         PreconditionUtil.checkState(!Objects.isNull(layer), DwException.stateReject("layer not found"));
         PreconditionUtil.checkState(layer.getStatus(), DwException.stateReject("layer has been removed"));
 
-        DwLayerDTO dto = DwLayerModelMapper.INSTANCE.toDTO(layer);
+//        DwLayerDTO dto = this.dwLayerModelMapper.toDTO(layer);
+        DwLayerDTO dto = new DwLayerDTO();
+        BeanUtils.copyProperties(layer, dto);
 
         return Message.ok().data("item", dto);
     }
@@ -107,7 +121,8 @@ public class DwLayerServiceImpl implements DwLayerService {
         queryWrapper.eq("status", Boolean.TRUE);
         queryWrapper.eq("preset", Boolean.TRUE);
         List<DwLayer> dwLayers = this.dwLayerMapper.selectList(queryWrapper);
-        List<DwLayerListItemDTO> dtos = DwLayerModelMapper.INSTANCE.toList(dwLayers);
+//        List<DwLayerListItemDTO> dtos = DwLayerModelMapper.INSTANCE.toList(dwLayers);
+        List<DwLayerListItemDTO> dtos = new ArrayList<>();
 
         return Message.ok().data("list", dtos);
     }
@@ -128,10 +143,10 @@ public class DwLayerServiceImpl implements DwLayerService {
         queryWrapper.eq("status", Boolean.TRUE);
         queryWrapper.eq("preset", Boolean.FALSE);
         if (Strings.isNotBlank(name)) {
-            queryWrapper.like("name", name).or().like("name_alias", name);
+            queryWrapper.like("name", name).or().like("en_name", name);
         }
         if (!Objects.isNull(enabled)) {
-            queryWrapper.eq("enabled", enabled);
+            queryWrapper.eq("is_available", enabled);
         }
 
         Page<DwLayer> queryPage = new Page<>(page, size);
@@ -140,7 +155,8 @@ public class DwLayerServiceImpl implements DwLayerService {
 
         List<DwLayer> records = _page.getRecords();
 
-        List<DwLayerListItemDTO> list = DwLayerModelMapper.INSTANCE.toList(records);
+//        List<DwLayerListItemDTO> list = DwLayerModelMapper.INSTANCE.toList(records);
+        List<DwLayerListItemDTO> list = new ArrayList<>();
 
         PageInfo<DwLayerListItemDTO> __page = new PageInfo<>(list, _page.getCurrent(), _page.getSize(), _page.getTotal());
 
@@ -185,25 +201,30 @@ public class DwLayerServiceImpl implements DwLayerService {
 
         // 分层类型后的name参数单独校验
         String name = command.getName();
-        String nameAlias = command.getNameAlias();
-        String chargeUser = command.getChargeUser();
+        String enName = command.getEnName();
+        String owner = command.getOwner();
+        Integer order = command.getOrder();
         String description = command.getDescription();
-        String authority = command.getAuthority();
+        String principalName = command.getPrincipalName();
 //        authority = PreconditionUtil.checkStringArgumentNotBlankTrim(authority, DwException.argumentReject("authority should not empty"));
-        String availableDbs = command.getAvailableDbs();
-        String autoCollectStrategy = command.getAutoCollectStrategy();
-        if (Strings.isBlank(availableDbs)) {
-            availableDbs = "ALL";
+        String databases = command.getDatabases();
+//        String autoCollectStrategy = command.getAutoCollectStrategy();
+        if (Strings.isBlank(databases)) {
+            databases = "ALL";
         }
 
-        if (Strings.isBlank(autoCollectStrategy)) {
-            autoCollectStrategy = "{}";
+        if (Objects.isNull(order)) {
+            order = 1;
         }
+
+//        if (Strings.isBlank(autoCollectStrategy)) {
+//            autoCollectStrategy = "{}";
+//        }
 
         if (!layer.getPreset()) {
             name = PreconditionUtil.checkStringArgumentNotBlankTrim(name, DwException.argumentReject("name should not empty"));
-            nameAlias = PreconditionUtil.checkStringArgumentNotBlankTrim(nameAlias, DwException.argumentReject("name alias should not empty"));
-            chargeUser = PreconditionUtil.checkStringArgumentNotBlankTrim(chargeUser, DwException.argumentReject("charge user should not empty"));
+            enName = PreconditionUtil.checkStringArgumentNotBlankTrim(enName, DwException.argumentReject("en name should not empty"));
+            owner = PreconditionUtil.checkStringArgumentNotBlankTrim(owner, DwException.argumentReject("owner should not empty"));
             // 并且自定义分层在更新名称的时候，名称不能重复
             QueryWrapper<DwLayer> nameUniqueCheckQuery = new QueryWrapper<>();
             nameUniqueCheckQuery.eq("name", name);
@@ -215,33 +236,34 @@ public class DwLayerServiceImpl implements DwLayerService {
 
             // 并且自定义分层在更新名称的时候，name alias不能重复
             QueryWrapper<DwLayer> nameAliasUniqueCheckQuery = new QueryWrapper<>();
-            nameAliasUniqueCheckQuery.eq("name_alias", name);
+            nameAliasUniqueCheckQuery.eq("en_name", name);
             nameAliasUniqueCheckQuery.ne("id", id);
             nameAliasUniqueCheckQuery.eq("status", Boolean.TRUE);
             DwLayer nameAliasExist = this.dwLayerMapper.selectOne(nameAliasUniqueCheckQuery);
-            PreconditionUtil.checkState(Objects.isNull(nameAliasExist), DwException.stateReject("layer name alias aleardy exists"));
-            layer.setNameAlias(nameAlias);
+            PreconditionUtil.checkState(Objects.isNull(nameAliasExist), DwException.stateReject("layer en name aleardy exists"));
+            layer.setEnName(enName);
 
-            layer.setChargeUser(chargeUser);
+            layer.setOwner(owner);
         }
 
         // TODO
         String user = "hdfs";
 
-        Long oldVersion = layer.getVersion();
+        Long oldVersion = layer.getLockVersion();
 
         Date now = new Date();
-        layer.setAvailableDbs(availableDbs);
-        layer.setAutoCollectStrategy(autoCollectStrategy);
+        layer.setDbs(databases);
+//        layer.set(autoCollectStrategy);
         layer.setDescription(description);
-        layer.setAuthority(authority);
-        layer.setModifyUser(user);
-        layer.setModifyTime(now);
-        layer.setVersion(oldVersion + 1);
+        layer.setPrincipalName(principalName);
+        layer.setSort(order);
+//        layer.setModifyUser(user);
+        layer.setUpdateTime(now);
+        layer.setLockVersion(oldVersion + 1);
 
         UpdateWrapper<DwLayer> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", layer.getId());
-        updateWrapper.eq("version", oldVersion);
+        updateWrapper.eq("lock_version", oldVersion);
 
         int i = this.dwLayerMapper.update(layer, updateWrapper);
 
@@ -260,7 +282,7 @@ public class DwLayerServiceImpl implements DwLayerService {
     @Override
     public Message disable(HttpServletRequest request, Long id) throws DwException {
         changeEnable(request, id, Boolean.FALSE);
-        return null;
+        return Message.ok();
     }
 
     private void changeEnable(HttpServletRequest request, Long id, Boolean enabled) throws DwException {
@@ -269,21 +291,19 @@ public class DwLayerServiceImpl implements DwLayerService {
         DwLayer record = this.dwLayerMapper.selectById(id);
         PreconditionUtil.checkState(!Objects.isNull(record), DwException.stateReject("layer not found"));
         PreconditionUtil.checkState(record.getStatus(), DwException.stateReject("layer has been removed"));
-        if (Objects.equals(enabled, record.getEnabled())) {
+        if (Objects.equals(enabled, record.getIsAvailable())) {
             return;
         }
 
-        // TODO
-        String user = "hdfs";
-
-        Long oldVersion = record.getVersion();
-        record.setModifyUser(user);
-        record.setModifyTime(new Date());
-        record.setEnabled(enabled);
-        record.setVersion(oldVersion + 1);
+//        String user = "hdfs";
+        Long oldVersion = record.getLockVersion();
+//        record.setModifyUser(user);
+        record.setUpdateTime(new Date());
+        record.setIsAvailable(enabled);
+        record.setLockVersion(oldVersion + 1);
         UpdateWrapper<DwLayer> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", record.getId());
-        updateWrapper.eq("version", oldVersion);
+        updateWrapper.eq("lock_version", oldVersion);
         int update = this.dwLayerMapper.update(record, updateWrapper);
         PreconditionUtil.checkState(1 == update, DwException.stateReject(enabled ? "enable" : "disable" +  " failed"));
     }

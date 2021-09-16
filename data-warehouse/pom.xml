@@ -14,6 +14,7 @@
     <modules>
         <module>data-warehouse-server</module>
         <module>data-warehouse-service</module>
+        <module>data-warehouse-mybatis</module>
     </modules>
 
     <properties>

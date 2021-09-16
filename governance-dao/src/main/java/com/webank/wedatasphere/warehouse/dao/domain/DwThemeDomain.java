@@ -20,8 +20,8 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("dss_datawarehouse_layer")
-public class DwLayer extends DssWorkspaceEntity {
+@TableName("dss_datawarehouse_theme_domain")
+public class DwThemeDomain extends DssWorkspaceEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -33,26 +33,18 @@ public class DwLayer extends DssWorkspaceEntity {
 
     private String description;
 
-    // 授权的角色
-    @TableField(value = "principal_name")
-    private String principalName;
-
-    // 是否预置主题
-    private Boolean preset;
-
     @TableField(value = "is_available")
     private Boolean isAvailable;
 
-    // 为空代表所有库
-    @TableField(value = "dbs")
-    private String dbs;
+    // 可用角色，授权角色
+    @TableField(value = "principal_name")
+    private String principalName;
 
-    // 负责人
+    @TableField(value = "owner")
     private String owner;
 
     private Integer sort;
 
-    // 创建人
 //    @TableField(value = "create_user")
 //    private String createUser;
 

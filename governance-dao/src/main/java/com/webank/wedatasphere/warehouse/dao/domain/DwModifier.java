@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.webank.wedatasphere.warehouse.dao.interceptor.NameAttachWorkspaceTrans;
 import com.webank.wedatasphere.warehouse.dao.domain.common.DssWorkspaceEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -20,39 +19,28 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("dss_datawarehouse_layer")
-public class DwLayer extends DssWorkspaceEntity {
+@TableName("dss_datawarehouse_modifier")
+public class DwModifier extends DssWorkspaceEntity {
+
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @NameAttachWorkspaceTrans
-    private String name;
+    @TableField(value = "modifier_type")
+    private String modifierType;
 
-    @TableField(value = "en_name")
-    private String enName;
+    // 空：代表所有，如果是逗号分隔的字符串则代表对应的theme的names
+    @TableField(value = "theme_area")
+    private String themeArea;
+
+    // 空：代表所有，如果是逗号分隔的字符串则代表对应的layer的names
+    @TableField(value = "layer_area")
+    private String layerArea;
 
     private String description;
-
-    // 授权的角色
-    @TableField(value = "principal_name")
-    private String principalName;
-
-    // 是否预置主题
-    private Boolean preset;
 
     @TableField(value = "is_available")
     private Boolean isAvailable;
 
-    // 为空代表所有库
-    @TableField(value = "dbs")
-    private String dbs;
-
-    // 负责人
-    private String owner;
-
-    private Integer sort;
-
-    // 创建人
 //    @TableField(value = "create_user")
 //    private String createUser;
 
@@ -69,4 +57,5 @@ public class DwLayer extends DssWorkspaceEntity {
 
     @TableField(value = "lock_version")
     private Long lockVersion;
+
 }
