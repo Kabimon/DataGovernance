@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/governance/warehouse")
+@Path("/data-warehouse")
 public class DwLayerRestfulApi {
 
     private final DwLayerService dwLayerService;
@@ -33,6 +33,13 @@ public class DwLayerRestfulApi {
     @Path("/layers/preset")
     public Response getAllPresetLayers(@Context HttpServletRequest request) throws DwException {
         Message message = this.dwLayerService.getAllPresetLayers(request);
+        return Message.messageToResponse(message);
+    }
+
+    @GET
+    @Path("/layers/all")
+    public Response getAllLayers(@Context HttpServletRequest request) throws DwException {
+        Message message = this.dwLayerService.getAllLayers(request);
         return Message.messageToResponse(message);
     }
 

@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/governance/warehouse")
+@Path("/data-warehouse")
 public class DwThemeDomainRestfulApi {
 
     private final DwThemeDomainService dwThemeDomainService;
@@ -40,6 +40,18 @@ public class DwThemeDomainRestfulApi {
         command.setPage(page);
         command.setSize(size);
         Message message = this.dwThemeDomainService.queryPage(request, command);
+        return Message.messageToResponse(message);
+    }
+
+    @GET
+    @Path("/themedomains/all")
+    public Response queryAllThemeDomains(
+            @Context HttpServletRequest request,
+            @QueryParam("name") String name
+    )throws DwException {
+        final DwThemeDomainQueryCommand command = new DwThemeDomainQueryCommand();
+        command.setName(name);
+        Message message = this.dwThemeDomainService.queryAllThemeDomains(request, command);
         return Message.messageToResponse(message);
     }
 

@@ -120,6 +120,16 @@
 			</dependency>
 			<dependency>
 				<groupId>com.webank.wedatasphere.linkis</groupId>
+				<artifactId>linkis-httpclient</artifactId>
+				<version>${linkis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.webank.wedatasphere.linkis</groupId>
+				<artifactId>linkis-gateway-httpclient-support</artifactId>
+				<version>${linkis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.webank.wedatasphere.linkis</groupId>
 				<artifactId>linkis-module</artifactId>
 				<exclusions>
 					<exclusion>

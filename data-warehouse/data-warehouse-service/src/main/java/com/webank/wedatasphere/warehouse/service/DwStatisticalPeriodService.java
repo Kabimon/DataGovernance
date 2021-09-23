@@ -9,6 +9,8 @@ import com.webank.wedatasphere.warehouse.exception.DwException;
 import javax.servlet.http.HttpServletRequest;
 
 public interface DwStatisticalPeriodService {
+    Message queryAll(HttpServletRequest request, DwStatisticalPeriodQueryCommand command) throws DwException;
+
     Message queryPage(HttpServletRequest request, DwStatisticalPeriodQueryCommand command) throws DwException;
 
     Message create(HttpServletRequest request, DwStatisticalPeriodCreateCommand command) throws DwException;

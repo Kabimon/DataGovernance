@@ -115,14 +115,38 @@ public class DwLayerServiceImpl implements DwLayerService {
         return Message.ok().data("item", dto);
     }
 
+
+    @Override
+    public Message getAllLayers(HttpServletRequest request) throws DwException {
+        QueryWrapper<DwLayer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", Boolean.TRUE);
+        List<DwLayer> records = this.dwLayerMapper.selectList(queryWrapper);
+
+        List<DwLayerListItemDTO> dtos = new ArrayList<>();
+        for (DwLayer record : records) {
+            DwLayerListItemDTO dto = new DwLayerListItemDTO();
+            BeanUtils.copyProperties(record, dto);
+            dtos.add(dto);
+        }
+
+        return Message.ok().data("list", dtos);
+    }
+
+
     @Override
     public Message getAllPresetLayers(HttpServletRequest request) throws DwException {
         QueryWrapper<DwLayer> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", Boolean.TRUE);
         queryWrapper.eq("preset", Boolean.TRUE);
-        List<DwLayer> dwLayers = this.dwLayerMapper.selectList(queryWrapper);
+        List<DwLayer> records = this.dwLayerMapper.selectList(queryWrapper);
 //        List<DwLayerListItemDTO> dtos = DwLayerModelMapper.INSTANCE.toList(dwLayers);
         List<DwLayerListItemDTO> dtos = new ArrayList<>();
+
+        for (DwLayer record : records) {
+            DwLayerListItemDTO dto = new DwLayerListItemDTO();
+            BeanUtils.copyProperties(record, dto);
+            dtos.add(dto);
+        }
 
         return Message.ok().data("list", dtos);
     }
@@ -157,6 +181,13 @@ public class DwLayerServiceImpl implements DwLayerService {
 
 //        List<DwLayerListItemDTO> list = DwLayerModelMapper.INSTANCE.toList(records);
         List<DwLayerListItemDTO> list = new ArrayList<>();
+
+        for (DwLayer record : records) {
+            DwLayerListItemDTO dto = new DwLayerListItemDTO();
+            BeanUtils.copyProperties(record, dto);
+            list.add(dto);
+        }
+
 
         PageInfo<DwLayerListItemDTO> __page = new PageInfo<>(list, _page.getCurrent(), _page.getSize(), _page.getTotal());
 

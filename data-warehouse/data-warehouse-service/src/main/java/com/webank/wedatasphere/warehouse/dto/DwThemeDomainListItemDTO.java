@@ -16,4 +16,5 @@ public class DwThemeDomainListItemDTO {
     private Date createTime;
     private Date updateTime;
     private Boolean preset;
+    private Boolean isAvailable;
 }

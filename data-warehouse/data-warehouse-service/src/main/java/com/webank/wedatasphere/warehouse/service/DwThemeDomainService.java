@@ -7,6 +7,8 @@ import com.webank.wedatasphere.warehouse.exception.DwException;
 import javax.servlet.http.HttpServletRequest;
 
 public interface DwThemeDomainService {
+    Message queryAllThemeDomains(HttpServletRequest request, DwThemeDomainQueryCommand command) throws DwException;
+
     Message queryPage(HttpServletRequest request, DwThemeDomainQueryCommand command) throws DwException;
 
     Message create(HttpServletRequest request, DwThemeDomainCreateCommand command) throws DwException;

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -35,9 +36,15 @@ public class DssWorkspaceNameAutoTransformUpdateInteceptor extends AbstractSqlPa
 
         logger.info("use mybatis interceptor to handle name field [transform workspace.name ??]");
 
-//        MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
+        MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
         // 获取 SQL
-//        SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
+        SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
+//        System.out.println(sqlCommandType);
+
+        if (sqlCommandType == SqlCommandType.DELETE) {
+            return invocation.proceed();
+        }
+
         // 获取参数
         Object parameter = invocation.getArgs()[1];
 

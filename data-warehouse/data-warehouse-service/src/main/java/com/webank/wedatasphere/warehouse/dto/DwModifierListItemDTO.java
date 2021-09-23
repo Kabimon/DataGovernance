@@ -12,6 +12,7 @@ public class DwModifierListItemDTO {
     private String layerArea;
     private String themeArea;
     private String description;
+    private Boolean isAvailable;
     private Date createTime;
     private Date updateTime;
 }

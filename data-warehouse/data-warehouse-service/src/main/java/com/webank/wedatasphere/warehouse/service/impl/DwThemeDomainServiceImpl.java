@@ -38,6 +38,28 @@ public class DwThemeDomainServiceImpl implements DwThemeDomainService {
         this.dwThemeDomainMapper = dwThemeDomainMapper;
     }
 
+    @Override
+    public Message queryAllThemeDomains(HttpServletRequest request, DwThemeDomainQueryCommand command) throws DwException {
+        String name = command.getName();
+
+        QueryWrapper<DwThemeDomain> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", Boolean.TRUE);
+        if (Strings.isNotBlank(name)) {
+            queryWrapper.like("name", name).or().like("en_name", name);
+        }
+
+        List<DwThemeDomain> records = this.dwThemeDomainMapper.selectList(queryWrapper);
+
+        List<DwThemeDomainListItemDTO> list = new ArrayList<>();
+        for (DwThemeDomain domain : records) {
+            DwThemeDomainListItemDTO dwThemeDomainListItemDTO = new DwThemeDomainListItemDTO();
+            BeanUtils.copyProperties(domain, dwThemeDomainListItemDTO);
+            list.add(dwThemeDomainListItemDTO);
+        }
+
+        return Message.ok().data("list", list);
+    }
+
     @Transactional
     @Override
     public Message queryPage(HttpServletRequest request, DwThemeDomainQueryCommand command) throws DwException {

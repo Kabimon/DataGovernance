@@ -56,10 +56,31 @@ public class DwModifierServiceImpl implements DwModifierService {
     }
 
     @Override
+    public Message queryAllModifiers(HttpServletRequest request, DwModifierQueryCommand command) throws DwException {
+        String typeName = command.getName();
+
+        QueryWrapper<DwModifier> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", Boolean.TRUE);
+        if (Strings.isNotBlank(typeName)) {
+            queryWrapper.like("modifier_type", typeName);
+        }
+        List<DwModifier> records = this.dwModifierMapper.selectList(queryWrapper);
+
+        List<DwModifierListItemDTO> list = new ArrayList<>();
+        DwModifierListItemDTO dto;
+        for (DwModifier modifier : records) {
+            dto = new DwModifierListItemDTO();
+            BeanUtils.copyProperties(modifier, dto);
+            list.add(dto);
+        }
+        return Message.ok().data("list", list);
+    }
+
+    @Override
     public Message queryPage(HttpServletRequest request, DwModifierQueryCommand command) throws DwException {
         Integer page = command.getPage();
         Integer size = command.getSize();
-        String typeName = command.getTypeName();
+        String typeName = command.getName();
         if (Objects.isNull(page))
             page = 1;
 
@@ -71,14 +92,27 @@ public class DwModifierServiceImpl implements DwModifierService {
         if (Strings.isNotBlank(typeName)) {
             queryWrapper.like("modifier_type", typeName);
         }
+
+        if (!Objects.isNull(command.getEnabled())) {
+            queryWrapper.eq("is_available", command.getEnabled());
+        }
+
         Page<DwModifier> queryPage = new Page<>(page, size);
 
         IPage<DwModifier> _page = this.dwModifierMapper.selectPage(queryPage, queryWrapper);
 
         List<DwModifier> records = _page.getRecords();
 
-//        List<DwModifierListItemDTO> list = DwDecorationModelMapper.INSTANCE.toList(records);
         List<DwModifierListItemDTO> list = new ArrayList<>();
+        DwModifierListItemDTO dto;
+        for (DwModifier modifier : records) {
+            dto = new DwModifierListItemDTO();
+            BeanUtils.copyProperties(modifier, dto);
+            list.add(dto);
+        }
+
+//        List<DwModifierListItemDTO> list = DwDecorationModelMapper.INSTANCE.toList(records);
+//        List<DwModifierListItemDTO> list = new ArrayList<>();
 
         PageInfo<DwModifierListItemDTO> __page = new PageInfo<>(list, _page.getCurrent(), _page.getSize(), _page.getTotal());
 
@@ -136,7 +170,9 @@ public class DwModifierServiceImpl implements DwModifierService {
 //        }
 
         DwModifier record = new DwModifier();
+        record.setThemeDomainId(dwThemeDomain.getId());
         record.setThemeArea(dwThemeDomain.getName());
+        record.setLayerId(dwLayer.getId());
         record.setLayerArea(dwLayer.getName());
         record.setModifierType(typeName);
         record.setDescription(description);
@@ -274,7 +310,9 @@ public class DwModifierServiceImpl implements DwModifierService {
 //        record.setSubjectDomainId(dwThemeDomain.getId());
 //        record.setLayerId(dwLayer.getId());
         record.setModifierType(typeName);
+        record.setThemeDomainId(dwThemeDomain.getId());
         record.setThemeArea(dwThemeDomain.getName());
+        record.setLayerId(dwLayer.getId());
         record.setLayerArea(dwLayer.getName());
         record.setDescription(description);
 //        record.setModifyUser(user);

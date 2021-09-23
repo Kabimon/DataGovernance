@@ -10,4 +10,5 @@ import lombok.ToString;
 @ToString
 public class DwStatisticalPeriodQueryCommand extends PageCommand {
     private String name;
+    private Boolean enabled;
 }

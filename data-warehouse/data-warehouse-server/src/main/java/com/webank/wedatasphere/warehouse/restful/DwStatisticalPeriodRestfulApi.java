@@ -1,5 +1,6 @@
 package com.webank.wedatasphere.warehouse.restful;
 
+import com.google.common.base.Strings;
 import com.webank.wedatasphere.linkis.server.Message;
 import com.webank.wedatasphere.warehouse.cqe.*;
 import com.webank.wedatasphere.warehouse.exception.DwException;
@@ -16,7 +17,7 @@ import javax.ws.rs.core.Response;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/governance/warehouse")
+@Path("/data-warehouse")
 public class DwStatisticalPeriodRestfulApi {
 
     private final DwStatisticalPeriodService dwStatisticalPeriodService;
@@ -26,6 +27,18 @@ public class DwStatisticalPeriodRestfulApi {
         this.dwStatisticalPeriodService = dwStatisticalPeriodService;
     }
 
+    @GET
+    @Path("/statistical_periods/all")
+    public Response queryAll(
+            @Context HttpServletRequest request,
+            @QueryParam("name") String name
+    )throws DwException {
+        final DwStatisticalPeriodQueryCommand command = new DwStatisticalPeriodQueryCommand();
+        command.setName(name);
+        Message message = this.dwStatisticalPeriodService.queryAll(request, command);
+        return Message.messageToResponse(message);
+    }
+
     // query paged statistical periods
     @GET
     @Path("/statistical_periods")
@@ -33,12 +46,16 @@ public class DwStatisticalPeriodRestfulApi {
             @Context HttpServletRequest request,
             @QueryParam("page") Integer page,
             @QueryParam("size") Integer size,
-            @QueryParam("name") String name
+            @QueryParam("name") String name,
+            @QueryParam(value = "enabled") String enabled
     )throws DwException {
         final DwStatisticalPeriodQueryCommand command = new DwStatisticalPeriodQueryCommand();
         command.setName(name);
         command.setPage(page);
         command.setSize(size);
+        if (!Strings.isNullOrEmpty(enabled)) {
+            command.setEnabled(Boolean.parseBoolean(enabled));
+        }
         Message message = this.dwStatisticalPeriodService.queryPage(request, command);
         return Message.messageToResponse(message);
     }

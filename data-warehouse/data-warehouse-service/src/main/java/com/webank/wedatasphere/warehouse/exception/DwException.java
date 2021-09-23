@@ -4,8 +4,8 @@ import com.webank.wedatasphere.linkis.common.exception.ErrorException;
 
 public class DwException extends ErrorException {
 
-    public static final Integer ARGUMENT_ERROR = 40000;
-    public static final Integer BUSINESS_ERROR = 41000;
+    public static final Integer ARGUMENT_ERROR = 21101;
+    public static final Integer BUSINESS_ERROR = 22101;
 
     private int errorCode;
     private Object[] parameters;

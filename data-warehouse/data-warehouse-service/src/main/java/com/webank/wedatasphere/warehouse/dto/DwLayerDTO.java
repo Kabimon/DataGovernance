@@ -17,5 +17,6 @@ public class DwLayerDTO {
     private String description;
     private String principalName;
     private String dbs;
+    private String owner;
     private Integer sort;
 }

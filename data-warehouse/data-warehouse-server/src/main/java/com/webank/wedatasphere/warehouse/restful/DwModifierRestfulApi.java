@@ -1,5 +1,6 @@
 package com.webank.wedatasphere.warehouse.restful;
 
+import com.google.common.base.Strings;
 import com.webank.wedatasphere.linkis.server.Message;
 import com.webank.wedatasphere.warehouse.cqe.*;
 import com.webank.wedatasphere.warehouse.exception.DwException;
@@ -16,7 +17,7 @@ import javax.ws.rs.core.Response;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/governance/warehouse")
+@Path("/data-warehouse")
 public class DwModifierRestfulApi {
 
     private final DwModifierService dwModifierService;
@@ -26,6 +27,18 @@ public class DwModifierRestfulApi {
         this.dwModifierService = dwModifierService;
     }
 
+    @GET
+    @Path("/modifiers/all")
+    public Response queryAllModifiers(
+            @Context HttpServletRequest request,
+            @QueryParam("typeName") String typeName
+    )throws DwException {
+        final DwModifierQueryCommand command = new DwModifierQueryCommand();
+        command.setName(typeName);
+        Message message = this.dwModifierService.queryAllModifiers(request, command);
+        return Message.messageToResponse(message);
+    }
+
     // query paged modifiers
     @GET
     @Path("/modifiers")
@@ -33,12 +46,16 @@ public class DwModifierRestfulApi {
             @Context HttpServletRequest request,
             @QueryParam("page") Integer page,
             @QueryParam("size") Integer size,
-            @QueryParam("typeName") String typeName
+            @QueryParam("name") String typeName,
+            @QueryParam("enabled") String enabled
     )throws DwException {
         final DwModifierQueryCommand command = new DwModifierQueryCommand();
-        command.setTypeName(typeName);
+        command.setName(typeName);
         command.setPage(page);
         command.setSize(size);
+        if (!Strings.isNullOrEmpty(enabled)) {
+            command.setEnabled(Boolean.parseBoolean(enabled));
+        }
         Message message = this.dwModifierService.queryPage(request, command);
         return Message.messageToResponse(message);
     }

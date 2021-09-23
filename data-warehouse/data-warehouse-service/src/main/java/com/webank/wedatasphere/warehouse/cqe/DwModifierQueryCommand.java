@@ -9,6 +9,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class DwModifierQueryCommand extends PageCommand {
-    private String typeName;
+    private String name;
     private Boolean enabled;
 }

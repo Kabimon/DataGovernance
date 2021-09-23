@@ -9,6 +9,8 @@ import com.webank.wedatasphere.warehouse.exception.DwException;
 import javax.servlet.http.HttpServletRequest;
 
 public interface DwModifierService {
+    Message queryAllModifiers(HttpServletRequest request, DwModifierQueryCommand command) throws DwException;
+
     Message queryPage(HttpServletRequest request, DwModifierQueryCommand command) throws DwException;
 
     Message create(HttpServletRequest request, DwModifierCreateCommand command) throws DwException;

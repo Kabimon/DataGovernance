@@ -49,6 +49,19 @@ public class DwStatisticalPeriodServiceImpl implements DwStatisticalPeriodServic
     }
 
     @Override
+    public Message queryAll(HttpServletRequest request, DwStatisticalPeriodQueryCommand command) throws DwException {
+        String name = command.getName();
+        QueryWrapper<DwStatisticalPeriod> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", Boolean.TRUE);
+        if (Strings.isNotBlank(name)) {
+            queryWrapper.like("name", name).or().like("en_name", name);
+        }
+
+        List<DwStatisticalPeriodVo> records = this.dwStatisticalPeriodMapper.selectItems(queryWrapper);
+        return Message.ok().data("list", records);
+    }
+
+    @Override
     public Message queryPage(HttpServletRequest request, DwStatisticalPeriodQueryCommand command) throws DwException {
         Integer page = command.getPage();
         Integer size = command.getSize();
@@ -63,6 +76,10 @@ public class DwStatisticalPeriodServiceImpl implements DwStatisticalPeriodServic
         queryWrapper.eq("status", Boolean.TRUE);
         if (Strings.isNotBlank(name)) {
             queryWrapper.like("name", name).or().like("en_name", name);
+        }
+
+        if (!Objects.isNull(command.getEnabled())) {
+            queryWrapper.eq("is_available", command.getEnabled());
         }
 
         Page<DwStatisticalPeriod> queryPage = new Page<>(page, size);
