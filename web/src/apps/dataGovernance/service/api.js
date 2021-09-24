@@ -6,7 +6,7 @@ import api from '@/common/service/api'
  * @returns {Object.result}
  *
  */
-const getHiveSummary = () =>
+export const getHiveSummary = () =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveSummary`, 'get')
 
 /**
@@ -14,7 +14,7 @@ const getHiveSummary = () =>
  * @param {*} guid
  * @returns
  */
-const getHiveTblBasic = guid =>
+export const getHiveTblBasic = guid =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveTbl/${guid}/basic`, {}, 'get')
 
 /**
@@ -22,7 +22,7 @@ const getHiveTblBasic = guid =>
  * @param {*} guid
  * @returns
  */
-const getHiveTblPartition = guid =>
+export const getHiveTblPartition = guid =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveTbl/${guid}/partition`, {}, 'get')
 
 /**
@@ -30,7 +30,7 @@ const getHiveTblPartition = guid =>
  * @param {*} guid
  * @returns
  */
-const getSelectSql = guid =>
+export const getSelectSql = guid =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveTbl/${guid}/select`, {}, 'get')
 
 /**
@@ -38,7 +38,7 @@ const getSelectSql = guid =>
  * @param {*} guid
  * @returns
  */
-const getSelectDdl = guid =>
+export const getSelectDdl = guid =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveTbl/${guid}/create`, {}, 'get')
 
 /**
@@ -46,7 +46,7 @@ const getSelectDdl = guid =>
  * @param {query}
  * @returns
  */
-const getHiveTbls = params =>
+export const getHiveTbls = params =>
   api.fetch(
     `${API_PATH.DATA_GOVERNANCE}hiveTbl/search?query=${params.query}&owner=${params.owner}&limit=${params.limit}&offset=${params.offset}`,
     {},
@@ -58,7 +58,7 @@ const getHiveTbls = params =>
  * @param {*} guid
  * @returnsL
  */
-const getLineage = guid =>
+export const getLineage = guid =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveTbl/${guid}/lineage`, {}, 'get')
 
 /**
@@ -66,7 +66,7 @@ const getLineage = guid =>
  * @params {Map}
  * @returns
  */
-const putCommetBulk = params => {
+export const putCommetBulk = params => {
   return api.fetch(`${API_PATH.DATA_GOVERNANCE}comment/bulk`, params, 'put')
 }
 
@@ -75,7 +75,7 @@ const putCommetBulk = params => {
  * @params {void}
  * @returns Array
  */
-const getTopStorage = () =>
+export const getTopStorage = () =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}hiveTbl/topStorage`, {}, 'get')
 
 /**
@@ -83,7 +83,7 @@ const getTopStorage = () =>
  * @params {guid}
  * @returns String
  */
-const postSetLabel = (guid, params) =>
+export const postSetLabel = (guid, params) =>
   api.fetch(`${API_PATH.DATA_GOVERNANCE}label/${guid}`, params, 'post')
 
 /**
@@ -91,7 +91,7 @@ const postSetLabel = (guid, params) =>
  * @params {guid, Obiect}
  * @returns String
  */
-const postSetComment = (guid, comment) =>
+export const postSetComment = (guid, comment) =>
   api.fetch(
     `${API_PATH.DATA_GOVERNANCE}comment/${guid}?comment=${comment}`,
     {},
@@ -103,7 +103,7 @@ const postSetComment = (guid, comment) =>
  * @params {workspaceId}
  * @returns Array
  */
-const getWorkspaceUsers = (workspackId, search) =>
+export const getWorkspaceUsers = (workspackId, search) =>
   api.fetch(
     `${API_PATH.DATA_GOVERNANCE}getWorkspaceUsers/${workspackId}/${search}`,
     {},
@@ -115,56 +115,92 @@ const getWorkspaceUsers = (workspackId, search) =>
  * @params {workspaceId}
  * @returns Array
  */
-const getThemedomains = (page = 1, size = 10, name) =>
-  api.fetch(`/governance/warehouse/themedomains`, { page, size, name }, 'get')
+export const getThemedomains = (page, size, name) =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains`,
+    { page, size, name },
+    'get'
+  )
 
 /**
  * 创建主体域
  * @params {workspaceId}
  * @returns Array
  */
-const createThemedomains = body =>
-  api.fetch(`/governance/warehouse/themedomains`, body, 'post')
+export const createThemedomains = body =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains`,
+    body,
+    'post'
+  )
 
 /**
  * 删除主题域
  * @params {id}
  * @returns Any
  */
-const deleteThemedomains = id =>
-  api.fetch(`/governance/warehouse/themedomains/${id}`, {}, 'delete')
+export const deleteThemedomains = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains/${id}`,
+    {},
+    'delete'
+  )
 
 /**
  * 禁用主题域
  * @params {workspaceId}
  * @returns Array
  */
-const disableThemedomains = id =>
-  api.fetch(`/governance/warehouse/themedomains/${id}/disable`, {}, 'put')
+export const disableThemedomains = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains/${id}/disable`,
+    {},
+    'put'
+  )
 
 /**
  * 启用主题域
  * @params {workspaceId}
  * @returns Array
  */
-const enableThemedomains = id =>
-  api.fetch(`/governance/warehouse/themedomains/${id}/enable`, {}, 'put')
+export const enableThemedomains = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains/${id}/enable`,
+    {},
+    'put'
+  )
 
 /**
  * 根据id获取主题
  * @params {workspaceId}
  * @returns Array
  */
-const getThemedomainsById = id =>
-  api.fetch(`/governance/warehouse/themedomains/${id}`, {}, 'get')
+export const getThemedomainsById = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains/${id}`,
+    {},
+    'get'
+  )
 
 /**
  * 编辑主题
  * @params {workspaceId}
  * @returns Array
  */
-const editThemedomains = (id, body) =>
-  api.fetch(`/governance/warehouse/themedomains/${id}`, body, 'put')
+export const editThemedomains = (id, body) =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/themedomains/${id}`,
+    body,
+    'put'
+  )
+
+/**
+ * 查询所有分层
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const getLayersAll = () =>
+  api.fetch(`${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/all`, {}, 'get')
 
 /**
  * 查询所有预置分层
@@ -172,14 +208,23 @@ const editThemedomains = (id, body) =>
  * @returns Array
  */
 export const getLayersPreset = () =>
-  api.fetch(`/governance/warehouse/layers/preset`, {}, 'get')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/preset`,
+    {},
+    'get'
+  )
+
 /**
  * 分页查询自定义分层
  * @params {workspaceId}
  * @returns Array
  */
 export const getLayersCustom = (page = 1, size = 10) =>
-  api.fetch(`/governance/warehouse/layers/custom`, { page, size }, 'get')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/custom`,
+    { page, size },
+    'get'
+  )
 
 /**
  * 新增自定义分层
@@ -187,7 +232,11 @@ export const getLayersCustom = (page = 1, size = 10) =>
  * @returns Array
  */
 export const createLayersCustom = body =>
-  api.fetch(`/governance/warehouse/layers/custom`, body, 'post')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/custom`,
+    body,
+    'post'
+  )
 
 /**
  * 根据ID查询某个分层信息
@@ -195,7 +244,7 @@ export const createLayersCustom = body =>
  * @returns Array
  */
 export const getLayersById = id =>
-  api.fetch(`/governance/warehouse/layers/${id}`, {}, 'get')
+  api.fetch(`${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/${id}`, {}, 'get')
 
 /**
  * 编辑分层
@@ -203,7 +252,11 @@ export const getLayersById = id =>
  * @returns Array
  */
 export const editLayersCustom = (id, body) =>
-  api.fetch(`/governance/warehouse/layers/${id}`, body, 'put')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/${id}`,
+    body,
+    'put'
+  )
 
 /**
  * 删除分层
@@ -211,7 +264,11 @@ export const editLayersCustom = (id, body) =>
  * @returns Array
  */
 export const deleteLayers = id =>
-  api.fetch(`/governance/warehouse/layers/${id}`, {}, 'delete')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/${id}`,
+    {},
+    'delete'
+  )
 
 /**
  * 禁用分层
@@ -219,7 +276,11 @@ export const deleteLayers = id =>
  * @returns Array
  */
 export const disableLayers = id =>
-  api.fetch(`/governance/warehouse/layers/${id}/disable`, {}, 'put')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/${id}/disable`,
+    {},
+    'put'
+  )
 
 /**
  *  启用分层
@@ -227,26 +288,196 @@ export const disableLayers = id =>
  * @returns Array
  */
 export const enableLayers = id =>
-  api.fetch(`/governance/warehouse/layers/${id}/enable`, {}, 'put')
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/layers/${id}/enable`,
+    {},
+    'put'
+  )
 
-export {
-  getHiveSummary,
-  getHiveTblBasic,
-  getHiveTblPartition,
-  getSelectSql,
-  getSelectDdl,
-  getHiveTbls,
-  getLineage,
-  putCommetBulk,
-  getTopStorage,
-  postSetLabel,
-  postSetComment,
-  getWorkspaceUsers,
-  getThemedomains,
-  createThemedomains,
-  deleteThemedomains,
-  disableThemedomains,
-  enableThemedomains,
-  getThemedomainsById,
-  editThemedomains
-}
+/**
+ *  创建修饰词
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const createModifiers = body =>
+  api.fetch(`${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers`, body, 'post')
+
+/**
+ *  删除修饰词
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const deleteModifiers = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers/${id}`,
+    {},
+    'delete'
+  )
+
+/**
+ *  编辑修饰词
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const editModifiers = (id, body) =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers/${id}`,
+    body,
+    'put'
+  )
+
+/**
+ *  分页获取修饰词
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const getModifiers = (page, size, name, enabled) =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers`,
+    { page, size, name, enabled },
+    'get'
+  )
+
+/**
+ *  根据id获取
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const getModifiersById = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers/${id}`,
+    {},
+    'get'
+  )
+
+/**
+ * 禁用修饰词
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const disableModifiers = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers/${id}/disable`,
+    {},
+    'put'
+  )
+
+/**
+ *  启用修饰词
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const enableModifiers = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/modifiers/${id}/enable`,
+    {},
+    'put'
+  )
+
+////////
+
+/**
+ *  创建统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const createStatisticalPeriods = body =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods`,
+    body,
+    'post'
+  )
+
+/**
+ *  删除统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const deleteStatisticalPeriods = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods/${id}`,
+    {},
+    'delete'
+  )
+
+/**
+ *  编辑统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const editStatisticalPeriods = (id, body) =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods/${id}`,
+    body,
+    'put'
+  )
+
+/**
+ *  分页获取统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const getStatisticalPeriods = (page, size, name, enabled) =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods`,
+    { page, size, name, enabled },
+    'get'
+  )
+
+/**
+ *  根据id获取统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const getStatisticalPeriodsById = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods/${id}`,
+    {},
+    'get'
+  )
+
+/**
+ * 禁用统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const disableStatisticalPeriods = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods/${id}/disable`,
+    {},
+    'put'
+  )
+
+/**
+ *  启用统计周期
+ * @params {workspaceId}
+ * @returns Array
+ */
+export const enableStatisticalPeriods = id =>
+  api.fetch(
+    `${API_PATH.WAREHOUSE_PATH}/data-warehouse/statistical_periods/${id}/enable`,
+    {},
+    'put'
+  )
+
+// export {
+//   getHiveSummary,
+//   getHiveTblBasic,
+//   getHiveTblPartition,
+//   getSelectSql,
+//   getSelectDdl,
+//   getHiveTbls,
+//   getLineage,
+//   putCommetBulk,
+//   getTopStorage,
+//   postSetLabel,
+//   postSetComment,
+//   getWorkspaceUsers,
+//   getThemedomains,
+//   createThemedomains,
+//   deleteThemedomains,
+//   disableThemedomains,
+//   enableThemedomains,
+//   getThemedomainsById,
+//   editThemedomains
+// }

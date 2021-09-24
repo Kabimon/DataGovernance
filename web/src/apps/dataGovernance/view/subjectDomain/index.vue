@@ -6,6 +6,7 @@
         enter-button
         placeholder="输入名称搜索"
         style="width: 300px"
+        v-model="searchVal"
         @on-search="handleSearch"
       />
       <Button type="primary" icon="md-add" @click="handleCreate">
@@ -26,7 +27,12 @@
       <template slot-scope="{ row }" slot="isAvailable">
         {{ row.isAvailable ? '启用' : '禁用' }}
       </template>
-
+      <template slot-scope="{ row }" slot="createTime">
+        {{ row.createTime | formatDate }}
+      </template>
+      <template slot-scope="{ row }" slot="updateTime">
+        {{ row.updateTime | formatDate }}
+      </template>
       <template slot-scope="{ row }" slot="action">
         <Button
           size="small"
@@ -67,7 +73,7 @@
       />
     </div>
     <EditModal
-      :visible.sync="modalCfg.visible"
+      v-model="modalCfg.visible"
       :id="modalCfg.id"
       :mode="modalCfg.mode"
       @finish="handleModalFinish"
@@ -77,6 +83,7 @@
 
 <script>
 import EditModal from './editModal.vue'
+import formatDate from '../../utils/formatDate'
 import {
   getThemedomains,
   deleteThemedomains,
@@ -120,16 +127,16 @@ export default {
       this.loading = false
       this.handleGetData()
     },
-    handleSearch(name) {
+    handleSearch() {
       this.pageCfg.page = 1
-      this.handleGetData(name)
+      this.handleGetData()
     },
-    async handleGetData(name) {
+    async handleGetData() {
       this.loading = true
       let data = await getThemedomains(
         this.pageCfg.page,
         this.pageCfg.pageSize,
-        name
+        this.searchVal
       )
       this.loading = false
       let { current, pageSize, items, total } = data.page
@@ -142,27 +149,29 @@ export default {
       this.pageCfg.page = page
     },
   },
+  filters: {
+    formatDate,
+  },
   mounted() {
     this.handleGetData()
   },
   watch: {
     pageCfg: {
-      handler() {
-        this.handleGetData()
-      },
+      handler: 'handleGetData',
       deep: true,
     },
   },
 
   data() {
     return {
+      searchVal: '',
       columns: [
         {
-          title: '主题域名称',
+          title: '名称',
           key: 'name',
         },
         {
-          title: '主题域英文名',
+          title: '英文名',
           key: 'enName',
         },
         {
@@ -176,7 +185,7 @@ export default {
           ellipsis: true,
         },
         {
-          title: '主题域选择权限',
+          title: '选择权限',
           key: 'principalName',
           slot: 'principalName',
         },
@@ -187,15 +196,17 @@ export default {
         {
           title: '创建时间',
           key: 'createTime',
+          slot: 'createTime',
         },
         {
           title: '更新时间',
           key: 'updateTime',
+          slot: 'updateTime',
         },
         {
           title: '操作',
-          key: 'action',
           slot: 'action',
+          minWidth: 60,
         },
       ],
       datalist: [],
@@ -211,7 +222,7 @@ export default {
       pageCfg: {
         page: 1,
         pageSize: 10,
-        total: 20,
+        total: 10,
       },
     }
   },

@@ -2,7 +2,6 @@
 export const subAppRoutes = {
   path: '/',
   name: 'layout',
-  // component: () => import('./view/layout.vue'),
   component: () => import('@/dss/view/layout.vue'),
   redirect: '/dataGovernance',
   meta: {
