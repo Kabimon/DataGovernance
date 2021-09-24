@@ -15,6 +15,12 @@
         <template slot-scope="{ row }" slot="isAvailable">
           {{ row.isAvailable ? '启用' : '禁用' }}
         </template>
+        <template slot-scope="{ row }" slot="createTime">
+          {{ row.createTime | formatDate }}
+        </template>
+        <template slot-scope="{ row }" slot="updateTime">
+          {{ row.updateTime | formatDate }}
+        </template>
         <template slot-scope="{ row }" slot="principalName">
           <Tag v-for="name of row.principalName.split(',')" :key="name">
             {{ name }}
@@ -71,6 +77,12 @@
         <template slot-scope="{ row }" slot="isAvailable">
           {{ row.isAvailable ? '启用' : '禁用' }}
         </template>
+        <template slot-scope="{ row }" slot="createTime">
+          {{ row.createTime | formatDate }}
+        </template>
+        <template slot-scope="{ row }" slot="updateTime">
+          {{ row.updateTime | formatDate }}
+        </template>
         <template slot-scope="{ row }" slot="principalName">
           <Tag v-for="name of row.principalName.split(',')" :key="name">
             {{ name }}
@@ -120,8 +132,8 @@
         />
       </div>
     </div>
-    <edit-modal
-      :visible.sync="modalCfg.visible"
+    <EditModal
+      v-model="modalCfg.visible"
       :id="modalCfg.id"
       :mode="modalCfg.mode"
       @finish="handleModalFinish"
@@ -138,8 +150,12 @@ import {
   disableLayers,
 } from '../../service/api'
 import EditModal from './editModal.vue'
+import formatDate from '../../utils/formatDate'
 export default {
   components: { EditModal },
+  filters: {
+    formatDate,
+  },
   methods: {
     handleModalFinish() {
       this.handleGetLayersCustom()
@@ -239,15 +255,18 @@ export default {
         {
           title: '创建时间',
           key: 'createTime',
+          slot: 'createTime',
         },
         {
           title: '更新时间',
-          key: 'createTime',
+          key: 'updateTime',
+          slot: 'updateTime',
         },
         {
           title: '操作',
           key: 'action',
           slot: 'action',
+          minWidth: 60,
         },
       ],
       customloading: false,
@@ -264,6 +283,7 @@ export default {
       pageCfg: {
         current: 1,
         pageSize: 10,
+        total: 10,
       },
     }
   },

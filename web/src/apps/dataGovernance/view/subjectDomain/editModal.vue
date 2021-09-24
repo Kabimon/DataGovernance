@@ -1,11 +1,5 @@
 <template>
-  <Modal
-    title="新建/编辑主题域"
-    v-model="visible"
-    @on-ok="handleOk"
-    @on-cancel="handleCancel"
-    :loading="visible"
-  >
+  <Modal title="新建/编辑主题域" v-model="visible" @on-cancel="cancelCallBack">
     <Form
       ref="formRef"
       :rules="ruleValidate"
@@ -43,8 +37,12 @@
           placeholder="描述"
         ></Input>
       </FormItem>
-      <Spin v-if="loading" fix></Spin>
     </Form>
+    <Spin v-if="loading" fix></Spin>
+    <template slot="footer">
+      <Button @click="handleCancel">取消</Button>
+      <Button type="primary" @click="handleOk">确定</Button>
+    </template>
   </Modal>
 </template>
 
@@ -55,9 +53,23 @@ import {
   editThemedomains,
 } from '../../service/api'
 export default {
+  model: {
+    prop: '_visible',
+    event: '_changeVisible',
+  },
+  computed: {
+    visible: {
+      get() {
+        return this._visible
+      },
+      set(val) {
+        this.$emit('_changeVisible', val)
+      },
+    },
+  },
   props: {
     // 是否可见
-    visible: {
+    _visible: {
       type: Boolean,
       required: true,
     },
@@ -70,10 +82,9 @@ export default {
       type: Number,
     },
   },
-  emits: ['finish', 'update:visible'],
-
+  emits: ['finish', '_changeVisible'],
   watch: {
-    visible(val) {
+    _visible(val) {
       if (val && this.id) this.handleGetById(this.id)
     },
   },
@@ -130,8 +141,12 @@ export default {
       this.formState.principalName = item.principalName.split(',')
       this.formState.description = item.description
     },
-    async handleCancel() {
+    cancelCallBack() {
       this.$refs['formRef'].resetFields()
+    },
+    handleCancel() {
+      this.$refs['formRef'].resetFields()
+      this.$emit('_changeVisible', false)
     },
     handleOk() {
       this.$refs['formRef'].validate(async (valid) => {
@@ -157,9 +172,10 @@ export default {
               this.loading = false
             }
             this.$refs['formRef'].resetFields()
-            this.$emit('update:visible', false)
+            this.$emit('_changeVisible', false)
             this.$emit('finish')
           } catch (error) {
+            this.loading = false
             console.log(error)
           }
         }

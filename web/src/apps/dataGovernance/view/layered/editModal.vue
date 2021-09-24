@@ -1,11 +1,5 @@
 <template>
-  <Modal
-    title="新建/编辑分层"
-    v-model="visible"
-    @on-ok="handleOk"
-    @on-cancel="handleCancel"
-    :loading="visible"
-  >
+  <Modal title="新建/编辑分层" v-model="visible" @on-cancel="cancelCallBack">
     <Form
       ref="formRef"
       :rules="ruleValidate"
@@ -63,6 +57,10 @@
       </FormItem>
     </Form>
     <Spin v-if="loading" fix></Spin>
+    <template slot="footer">
+      <Button @click="handleCancel">取消</Button>
+      <Button type="primary" @click="handleOk">确定</Button>
+    </template>
   </Modal>
 </template>
 
@@ -73,9 +71,23 @@ import {
   editLayersCustom,
 } from '../../service/api'
 export default {
+  model: {
+    prop: '_visible',
+    event: '_changeVisible',
+  },
+  computed: {
+    visible: {
+      get() {
+        return this._visible
+      },
+      set(val) {
+        this.$emit('_changeVisible', val)
+      },
+    },
+  },
   props: {
     // 是否可见
-    visible: {
+    _visible: {
       type: Boolean,
       required: true,
     },
@@ -88,7 +100,7 @@ export default {
       type: Number,
     },
   },
-  emits: ['finish', 'cancel', 'update:visible'],
+  emits: ['finish', '_changeVisible'],
   data() {
     return {
       // 验证规则
@@ -144,7 +156,7 @@ export default {
     }
   },
   watch: {
-    visible(val) {
+    _visible(val) {
       if (val && this.id) this.handleGetById(this.id)
     },
   },
@@ -154,14 +166,19 @@ export default {
       let { item } = await getLayersById(id)
       this.loading = false
       this.formState.name = item.name
+      this.formState.owner = item.owner
       this.formState.enName = item.enName
       this.formState.principalName = item.principalName.split(',')
       this.formState.databases = item.dbs.split(',')
       this.formState.description = item.description
       this.formState.order = item.sort
     },
-    async handleCancel() {
+    cancelCallBack() {
       this.$refs['formRef'].resetFields()
+    },
+    handleCancel() {
+      this.$refs['formRef'].resetFields()
+      this.$emit('_changeVisible', false)
     },
     async handleOk() {
       this.$refs['formRef'].validate(async (valid) => {
@@ -189,9 +206,10 @@ export default {
               this.loading = false
             }
             this.$refs['formRef'].resetFields()
-            this.$emit('update:visible', false)
+            this.$emit('_changeVisible', false)
             this.$emit('finish')
           } catch (error) {
+            this.loading = false
             console.log(error)
           }
         }
